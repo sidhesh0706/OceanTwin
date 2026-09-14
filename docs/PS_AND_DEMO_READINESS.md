@@ -1,50 +1,39 @@
-# OceanTwin: problem-statement check and demo-video plan
+# OceanTwin: problem-statement and presentation readiness
 
-Reviewed 13 September 2026 against the problem statement supplied by the team. This is a prototype-readiness review, not certification of INCOIS operational readiness.
+Reviewed 14 September 2026 against the supplied SIH problem statement. This is a tested local prototype, not an operational INCOIS service or a standards certification.
 
-## Exact sample upload test
+## Implemented in this iteration
 
-File: `OceanTwin_Sample_Global_Ocean.nc` (8,679,349 bytes), copied from the bundled synthetic global model. Posted as multipart data to the running test server on port 8001. The presentation server on port 8000 was not replaced during this test.
-
-Upload returned HTTP 200. Health, temperature slice at 500 m/time 6, salinity volume, currents at 100 m/time 6, full-depth profile, transect and regional statistics all returned HTTP 200. Uploaded metadata contains 13 dates, 9 depths, 62 latitudes and 144 longitudes. Observations were correctly empty because NetCDF upload does not include the separate instrument catalogue. Restoring the demo returned HTTP 200 and brought back 22 instruments.
-
-Found and fixed: Restore demo model was hidden for synthetic uploads, leaving no UI route to recover the bundled instrument catalogue. It is now always available in Settings. The API upload route was exercised with the exact file; this test did not automate the operating-system file chooser.
-
-## Requirement coverage
-
-| Problem-statement requirement | Current implementation | Remaining work |
+| Requirement | Verified implementation | Scope / remaining work |
 | --- | --- | --- |
-| Browser-native 3D model visualization | React, Cesium globe, Three.js local water column, selected-depth surfaces and volumetric points | Scientific volume ray casting is not implemented; test target hardware performance |
-| Temperature, salinity, currents, depth and time | Implemented, plus chlorophyll, animated currents and model time playback | Validate against a representative INCOIS dataset |
-| Isosurface extraction | Threshold-band point/layer preview | True triangulated isosurface extraction, such as marching cubes |
-| Instrument overlays and timestamped profile charts | Bundled synthetic Argo and glider profiles with model comparisons | User ingestion of instrument profiles; CTD/BGC sensor types and matching real observations |
-| NetCDF ingestion | xarray adapter, aliases, units, coordinate validation and upload | Broader CF grids/calendars; curvilinear grids require preprocessing |
-| Delimited text/ASCII ingestion | Not implemented as a user upload | CSV/text profile parser with schema, units, missing-value handling and validation |
-| Variable controls and colorbar | Variable selector, min/max range, opacity, vertical exaggeration presets | Palette selector and log/linear scale; continuous exaggeration slider |
-| Lightweight web API | FastAPI REST, local browser client, bounded fields and compressed responses | INCOIS deployment configuration and representative multi-user/load testing |
-| OPeNDAP and OGC WMS/WCS interoperability | Not implemented | Dedicated adapters/endpoints and standards validation |
-| Extensible architecture | Separated NetCDF adapter, services and renderers | A documented plugin registry; variable identifiers are currently fixed in code |
-| Outreach and science communication | Branded intro, Earth-to-ocean transition, presentation mode | Clear recorded narrative and labels explaining synthetic data and vertical exaggeration |
+| Real observations | 17 historical Argo profiles, 11,485 depth rows, official source retained; QC 1 adjusted A/D data; pressure-to-depth conversion | Historical snapshot, not live monitoring; model remains synthetic |
+| Observation ingestion | CSV, TSV and semicolon text; whole-file validation; six instrument labels; temperature, salinity and chlorophyll | Native ADCP velocity and additional BGC variables require adapters; only Argo has bundled real records |
+| 3D and 4D exploration | Earth-to-ocean transition, top-down and angled local views, depth/time, volume points, currents | Volume ray casting is not implemented; domain boundaries reflect source coverage |
+| True isosurface | Marching-tetrahedra triangle mesh in local ocean, adjustable threshold | Sampled model grid; missing cells stay open; does not fabricate coastal measurements |
+| Display controls | Variable/Viridis/thermal palettes, linear/log scale, color range, opacity, continuous exaggeration | Log scale requires a positive minimum; exaggerated depth is a visual aid |
+| Analysis | Collocated profiles, time offset, RMSE/MAE/bias, probes, fixed-depth great-circle transects and regional statistics | Real-Argo vs synthetic-model comparison is illustrative, not forecast validation |
+| NetCDF and REST | Rectilinear CF-style ingestion, bounded FastAPI endpoints and uploads, local compressed responses | Broader grids/calendars need preprocessing |
+| Outreach | Premium intro on refresh, actual Earth imagery, presentation mode, offline assets and provenance | Rehearse on the recording laptop with hardware acceleration |
+| OPeNDAP / OGC WMS/WCS | Not implemented | Still required for the full interoperability requirement |
+| Extensibility | Separate model and observation adapters and renderers | Dynamic plugin registry and arbitrary variable registration remain future work |
 
-## Priorities
+## Verification
 
-Before recording: use a stable build; keep the sample in an easy-to-find folder; rehearse upload and restore; set time to 12 February 2026 before comparing the bundled profiles; verify audio, screen capture and target resolution. Do not add a large untested feature immediately before recording.
+Production TypeScript/Vite build passes. Backend: 36 tests pass, including direct comparison with the preserved Argo NetCDF, upload replacement/rollback and existing field/analysis checks. Frontend: 7 tests pass for interpolation, periodic seams, geographic masks, coastal display and analytic isosurface geometry. Browser checks cover real profile selection, ocean transition, provenance/chart, local isosurface, palette controls and loading state. Automated tests do not certify every browser or target GPU.
 
-Highest-value next development: observational CSV/text upload and a paired model/profile sample. This directly addresses the central requirement to integrate incoming observations with model data. Next add palette selection and log/linear color scales. Follow with true isosurfaces, additional sensor schemas and standards-based connectors.
+The preserved model sample has also passed model upload, slice, volume, currents, profile, transect and statistics API checks. Uploading a model clears the separate catalogue. Upload observations afterwards, or use Settings → Real Argo + demo model to restore the presentation setup. Restore demo model selects the old synthetic instruments.
 
-A vetted real model file plus matching observations would strengthen the demonstration more than additional visual effects. Record data provenance, units, time alignment and any preprocessing. The current sample is synthetic and should be labelled as such; it is not a live INCOIS feed or an operational forecast.
+## Five-minute recording
 
-## Suggested five-minute recording
+| Time | Action and narration |
+| --- | --- |
+| 0:00–0:25 | Refresh to show premium intro and enter the actual Earth globe. Explain location, depth and time in one workspace. |
+| 0:25–1:05 | Explore ocean overlay, variables and time. State that this bundled model is synthetic. |
+| 1:05–2:00 | Select ARGO-4903973-003-A; show measured profile, source, WMO, date and QC. Toggle top-down/3D. |
+| 2:00–2:35 | Optionally enable model comparison and explain collocation/time offset; do not interpret synthetic-model errors as forecast skill. |
+| 2:35–3:15 | Show transect or regional statistics, then local isosurface and its threshold. |
+| 3:15–4:00 | Settings: change palette/scale and upload the provided observation CSV. Show the catalogue remains measured. |
+| 4:00–4:35 | Restore real-Argo setup; show depth/current animation and presentation mode. |
+| 4:35–5:00 | Explain next integration work: real model validation, operational feeds and standards interoperability. |
 
-| Time | Screen action | Point to explain |
-| --- | --- | --- |
-| 0:00–0:25 | Premium splash, introduction, enter globe | One environment for model fields and instrument evidence |
-| 0:25–1:05 | Ocean overlay, variables, depth and time | Explore a four-dimensional model; time is the fourth dimension |
-| 1:05–2:00 | Set 12 Feb; select an Argo float; show flat/3D views and profile | Timestamped observations compared with the model; explain RMSE/MAE/bias |
-| 2:00–2:40 | Transect and regional statistics | Fixed-depth spatial analysis, not a vertical transect curtain |
-| 2:40–3:30 | Settings: load the sample NetCDF; show updated fields | A validated model upload; separate observations are not embedded in this file |
-| 3:30–4:00 | Restore demo model; show instruments returning | Recover the paired demonstration data for the full workflow |
-| 4:00–4:35 | Presentation mode, currents and volume | Browser-native scientific exploration and outreach |
-| 4:35–5:00 | Short roadmap slide | CSV observations, real data validation, true isosurfaces and interoperability |
-
-Avoid claiming live monitoring, operational advisory accuracy, arbitrary-format ingestion, true isosurface extraction, complete OGC compliance or a finished sensor-plugin framework.
+Use [the real-data guide](REAL_ARGO.md) for sample path, provenance, CSV schema and caveats. Do not claim complete PS compliance, a live feed, validated advisories, arbitrary BGC/ADCP ingestion, volume ray casting or OGC certification.

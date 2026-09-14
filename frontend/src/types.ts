@@ -63,6 +63,13 @@ export interface Observation {
   timestamp: string;
   synthetic: boolean;
   max_depth: number;
+  wmo?: string | null;
+  cycle?: number | null;
+  data_mode?: string | null;
+  source_name?: string | null;
+  source_url?: string | null;
+  retrieved_date?: string | null;
+  available_variables?: Variable[] | null;
 }
 export interface Comparison {
   instrument_id: string;

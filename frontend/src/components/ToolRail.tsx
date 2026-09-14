@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useColorSettings, setColorSettings, type ColorSettings } from '../ocean/colors';
+import { useState, useEffect } from 'react';
 import {
   Globe,
   Layers,
@@ -50,6 +51,7 @@ interface Props {
   onThreshold: (n: number) => void;
   onUpload: () => void;
   onDemo: () => void;
+  onRealArgo: () => void;
   uploading: boolean;
   onTransect?: () => void;
   onRegionStats?: () => void;
@@ -80,6 +82,10 @@ const DIVE_PRESETS: { id: CameraPreset; label: string; desc: string }[] = [
 ];
 
 export function ToolRail(p: Props) {
+  const colors = useColorSettings();
+  useEffect(() => {
+    if (p.range[0] <= 0 && colors.scale === 'log') setColorSettings({ scale: 'linear' });
+  }, [p.range[0], colors.scale]);
   const [open, setOpen] = useState<Panel>(null);
   const toggle = (panel: Panel) => setOpen((v) => (v === panel ? null : panel));
 
@@ -264,6 +270,15 @@ export function ToolRail(p: Props) {
             <p className="fp-section-label" style={{ marginTop: 12 }}>
               VERTICAL SCALE
             </p>
+            <input
+              type="range"
+              aria-label="Vertical exaggeration"
+              min="1"
+              max="20"
+              step="0.1"
+              value={p.exaggeration}
+              onChange={(e) => p.onExaggeration(Number(e.target.value))}
+            />
             <div className="fp-segmented">
               {[1, 2, 5, 10].map((n) => (
                 <button
@@ -330,18 +345,24 @@ export function ToolRail(p: Props) {
               className={`fp-iso-btn ${p.mode === 'iso' ? 'active' : ''}`}
               onClick={() => p.onMode(p.mode === 'iso' ? 'slice' : 'iso')}
             >
-              <ScanLine size={13} /> Isosurface preview
+              <ScanLine size={13} /> Isosurface mesh
             </button>
             {p.mode === 'iso' && (
-              <input
-                aria-label="Isosurface threshold"
-                type="range"
-                min={p.range[0]}
-                max={p.range[1]}
-                step={(p.range[1] - p.range[0]) / 100}
-                value={p.threshold}
-                onChange={(e) => p.onThreshold(+e.target.value)}
-              />
+              <label>
+                <p className="fp-section-label">Threshold: {Number(p.threshold.toPrecision(4))}</p>
+                <input
+                  aria-label="Isosurface threshold"
+                  type="range"
+                  min={p.range[0]}
+                  max={p.range[1]}
+                  step={(p.range[1] - p.range[0]) / 100}
+                  value={p.threshold}
+                  onChange={(e) => p.onThreshold(+e.target.value)}
+                />
+                <p className="fp-hint">
+                  Equal-value surface in the sampled model. Missing cells remain open.
+                </p>
+              </label>
             )}
           </div>
         </div>
@@ -373,6 +394,38 @@ export function ToolRail(p: Props) {
             <p className="fp-section-label" style={{ marginTop: 16 }}>
               COLOR RANGE
             </p>
+            <label className="fp-toggle-row">
+              Palette
+              <select
+                aria-label="Color palette"
+                value={colors.palette}
+                onChange={(e) =>
+                  setColorSettings({ palette: e.target.value as ColorSettings['palette'] })
+                }
+              >
+                <option value="variable">Variable default</option>
+                <option value="viridis">Viridis</option>
+                <option value="thermal">Thermal</option>
+              </select>
+            </label>
+            <label className="fp-toggle-row">
+              Scale
+              <select
+                aria-label="Color scale"
+                value={colors.scale}
+                onChange={(e) =>
+                  setColorSettings({ scale: e.target.value as ColorSettings['scale'] })
+                }
+              >
+                <option value="linear">Linear</option>
+                <option value="log" disabled={p.range[0] <= 0}>
+                  Logarithmic
+                </option>
+              </select>
+            </label>
+            {p.range[0] <= 0 && (
+              <p className="fp-hint">Set a positive minimum to enable logarithmic colors.</p>
+            )}
             <ColorRangeInputs
               range={p.range}
               onChange={p.onRange}
@@ -393,7 +446,10 @@ export function ToolRail(p: Props) {
             <div className="fp-divider" />
             <button className="fp-upload-btn" disabled={p.uploading} onClick={p.onUpload}>
               <Upload size={13} />
-              {p.uploading ? 'Reading…' : 'Load NetCDF dataset'}
+              {p.uploading ? 'Reading…' : 'Load NetCDF / observation CSV'}
+            </button>
+            <button className="fp-text-btn" onClick={p.onRealArgo}>
+              Real Argo + demo model
             </button>
             <button className="fp-text-btn" onClick={p.onDemo}>
               Restore demo model

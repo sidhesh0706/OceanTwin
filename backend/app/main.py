@@ -37,7 +37,7 @@ async def lifespan(_app):
             Path(os.environ["OCEANTWIN_OBSERVATIONS"])
             if "OCEANTWIN_OBSERVATIONS" in os.environ
             else (
-                ROOT / "data/observations.json"
+                ROOT / "data/real_argo.json"
                 if "OCEANTWIN_DATASET" not in os.environ
                 else None
             )
@@ -302,6 +302,36 @@ def restore_demo():
         service, load_error = candidate, None
     return candidate.adapter.metadata()
 
+
+
+@app.post('/api/datasets/real-argo')
+def restore_real_argo():
+    """Load the curated measured Argo snapshot with the explicitly synthetic model."""
+    global service, load_error
+    candidate = OceanService(ROOT / 'data/demo_ocean.nc', ROOT / 'data/real_argo.json')
+    with lock:
+        service, load_error = candidate, None
+    return candidate.adapter.metadata()
+
+
+
+@app.post('/api/observations/upload')
+def upload_observations(file: Annotated[UploadFile, File()]):
+    from backend.app.adapters.observations import parse_observations
+    try:
+        payload = file.file.read(8 * 1024 * 1024 + 1)
+        if len(payload) > 8 * 1024 * 1024:
+            raise HTTPException(413, 'Observation limit is 8 MiB.')
+        candidate = parse_observations(payload)
+        with lock:
+            get_service().observations = candidate
+        return {'profiles':len(candidate), 'samples':sum(len(o['profiles']) for o in candidate)}
+    except HTTPException:
+        raise
+    except Exception as exc:
+        raise HTTPException(422, f'Invalid observation file: {exc}') from exc
+    finally:
+        file.file.close()
 
 if (REPO / "frontend/dist").exists():
     app.mount(

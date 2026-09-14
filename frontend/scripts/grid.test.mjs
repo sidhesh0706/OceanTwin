@@ -51,3 +51,14 @@ test('exact geographic masking preserves narrow islands, holes and wrapped longi
   assert.equal(contains(179.5,1),false);
   assert.equal(contains(178,1),false);
 });
+const isoSource=await readFile(new URL('../src/ocean/isosurface.ts',import.meta.url),'utf8');
+const isoJs=ts.transpileModule(isoSource,{compilerOptions:{module:ts.ModuleKind.ESNext}}).outputText;
+const {extractIsosurface}=await import(`data:text/javascript;base64,${Buffer.from(isoJs).toString('base64')}`);
+test('isosurface triangles lie on an analytic plane and preserve holes',()=>{
+ const values=[[[0,2],[0,2]],[[0,2],[0,2]]];
+ const mesh=extractIsosurface(values,[0,2],[0,3],[0,5],1);
+ assert.ok(mesh.length>0 && mesh.length%9===0);
+ for(let i=0;i<mesh.length;i+=3) assert.ok(Math.abs(mesh[i]-1)<1e-8);
+ assert.equal(extractIsosurface([[[null,2],[0,2]],[[0,2],[0,2]]],[0,2],[0,3],[0,5],1).length,0);
+ assert.equal(extractIsosurface(values,[0,2],[0,3],[0,5],10).length,0);
+});

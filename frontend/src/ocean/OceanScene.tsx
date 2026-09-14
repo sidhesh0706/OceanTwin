@@ -453,7 +453,7 @@ function Instruments({
                   e.stopPropagation();
                   onSelect(o);
                 }}
-                title={`${o.id} · ${o.max_depth} m · Synthetic profile`}
+                title={`${o.id} · ${Math.round(o.max_depth)} m · ${o.synthetic ? 'Synthetic profile' : 'Measured profile'}`}
               >
                 <span />
                 {active && <small>{o.id}</small>}

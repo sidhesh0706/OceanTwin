@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+from unittest.mock import patch
 
 import numpy as np
 import pytest
@@ -15,7 +16,7 @@ DATA = Path(__file__).resolve().parents[1] / "data"
 
 @pytest.fixture(scope="module")
 def client():
-    with TestClient(app) as c:
+    with patch.dict("os.environ", {"OCEANTWIN_OBSERVATIONS": str(DATA / "observations.json")}), TestClient(app) as c:
         yield c
 
 

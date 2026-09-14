@@ -1,3 +1,5 @@
+> Current presentation setup (14 September 2026): default observations are real historical Argo data with a synthetic model. Follow [REAL_ARGO.md](REAL_ARGO.md) and [the current readiness checklist](PS_AND_DEMO_READINESS.md). Older notes below describe earlier synthetic-only demonstrations.
+
 # Presentation rehearsal — 10 September 2026
 
 ## Start before entering the room

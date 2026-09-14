@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ChevronRight, Box, Waves, Globe } from 'lucide-react';
 import type { Dataset, Frame, Mode, Observation, Variable } from '../types';
-import { gradient } from '../ocean/colors';
+import { gradient, colorTick, useColorSettings } from '../ocean/colors';
 import { stamp } from '../services/api';
 
 interface Props {
@@ -46,6 +46,7 @@ export function RightPanel({
   baseName,
   onSelect,
 }: Props) {
+  useColorSettings();
   const [obsOpen, setObsOpen] = useState(false);
   const meta = dataset.variables.find((v) => v.id === variable)!;
   const argoCount = observations.filter((o) => o.instrument_type === 'ARGO' && argo).length;
@@ -98,7 +99,7 @@ export function RightPanel({
           />
           <div className="rp-colorbar-ticks">
             {[0, 0.25, 0.5, 0.75, 1].map((t) => (
-              <span key={t}>{(range[0] + (range[1] - range[0]) * t).toFixed(1)}</span>
+              <span key={t}>{colorTick(range[0], range[1], t).toPrecision(3)}</span>
             ))}
             <span className="rp-unit">{meta.units}</span>
           </div>
@@ -198,7 +199,8 @@ export function RightPanel({
                 <button key={o.id} onClick={() => onSelect(o)}>
                   {o.id}
                   <small>
-                    {o.instrument_type} · {o.max_depth} m
+                    {o.instrument_type} · {Math.round(o.max_depth)} m ·{' '}
+                    {o.synthetic ? 'Synthetic' : 'Measured'}
                   </small>
                 </button>
               ))}

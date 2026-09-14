@@ -319,11 +319,24 @@ export default function App({
     if (intro) return;
     inspectionRequest.current?.abort();
     setSelected(obs);
+    if (obs && !obs.synthetic && dataset) {
+      const t = Date.parse(obs.timestamp);
+      setTime(
+        dataset.times.reduce(
+          (best, stamp, i) =>
+            Math.abs(Date.parse(stamp) - t) < Math.abs(Date.parse(dataset.times[best]) - t)
+              ? i
+              : best,
+          0,
+        ),
+      );
+      setCompare(false);
+    }
     setInspection(null);
     if (obs) {
       setAnalysis(null);
       setPlaying(false);
-      setCompare(true);
+      setCompare(obs.synthetic);
       if (scene !== 'ocean' || !region?.observations.some((o) => o.id === obs.id)) {
         setAnchor(obs);
         setRegion(null);
@@ -369,7 +382,10 @@ export default function App({
     try {
       const body = new FormData();
       body.append('file', file);
-      await request<Dataset>('/api/datasets/upload', { method: 'POST', body });
+      await request(
+        /\.(csv|tsv|txt)$/i.test(file.name) ? '/api/observations/upload' : '/api/datasets/upload',
+        { method: 'POST', body },
+      );
       await bootstrap();
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Unable to load this NetCDF file.');
@@ -379,6 +395,15 @@ export default function App({
     }
   }
 
+  async function loadRealArgo() {
+    setPlaying(false);
+    try {
+      await request<Dataset>('/api/datasets/real-argo', { method: 'POST' });
+      await bootstrap();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Unable to load real Argo.');
+    }
+  }
   async function restore() {
     try {
       await request<Dataset>('/api/datasets/demo', { method: 'POST' });
@@ -397,6 +422,24 @@ export default function App({
     setThreshold(v === 'temperature' ? 20 : (defaultRanges[v][0] + defaultRanges[v][1]) / 2);
   }
   function chooseMode(m: Mode) {
+    if (m === 'iso' && scene === 'globe' && dataset) {
+      const center = observations[0] ?? {
+        id: 'analysis-region',
+        instrument_type: 'CTD' as const,
+        latitude: (dataset.bounds.latitude[0] + dataset.bounds.latitude[1]) / 2,
+        longitude: dataset.global
+          ? 65
+          : (dataset.bounds.longitude[0] + dataset.bounds.longitude[1]) / 2,
+        timestamp: dataset.times[time],
+        synthetic: true,
+        max_depth: dataset.bounds.depth[1],
+      };
+      setAnchor(center);
+      setScene('ocean');
+      setRegion(null);
+      setSelected(null);
+      setPreset('domain');
+    }
     setShowField(true);
     setMode(m);
     if (m === 'currents') setCurrents(true);
@@ -455,7 +498,7 @@ export default function App({
             observations[0] ??
             null,
         );
-        setCompare(true);
+        setCompare(false);
         break;
       default:
         setTour(-1);
@@ -527,7 +570,7 @@ export default function App({
             <div className="init-bar" />
           </div>
         )}
-        <small className="init-footer">OceanTwin · Demo model · Synthetic profiles</small>
+        <small className="init-footer">OceanTwin · Model and observation catalogue</small>
       </div>
     );
   }
@@ -591,7 +634,9 @@ export default function App({
             <i className={busy || regionBusy ? 'loading' : ''} />
             {busy || regionBusy ? 'Updating' : 'System Ready'}
           </span>
-          <span className="demo-badge">{dataset.synthetic ? 'DEMO DATA' : 'LOCAL DATA'}</span>
+          <span className="demo-badge">
+            {dataset.synthetic ? 'SYNTHETIC MODEL' : 'LOCAL MODEL'}
+          </span>
           <button
             className="icon-button"
             aria-label={isFull ? 'Exit fullscreen' : 'Enter fullscreen'}
@@ -763,6 +808,7 @@ export default function App({
           onThreshold={setThreshold}
           onUpload={() => fileInput.current?.click()}
           onDemo={() => void restore()}
+          onRealArgo={() => void loadRealArgo()}
           uploading={uploading}
           onTransect={() => openAnalysis('transect')}
           onRegionStats={() => openAnalysis('stats')}
@@ -838,7 +884,7 @@ export default function App({
             <option value="slice">Depth slice</option>
             <option value="volume">3D volume</option>
             {dataset.has_currents && <option value="currents">Current field</option>}
-            <option value="iso">Isosurface preview</option>
+            <option value="iso">Isosurface mesh</option>
           </select>
           <label>
             DEPTH{' '}
@@ -883,7 +929,7 @@ export default function App({
       <input
         ref={fileInput}
         type="file"
-        accept=".nc"
+        accept=".nc,.csv,.tsv,.txt"
         hidden
         aria-label="Upload NetCDF"
         onChange={(e) => {

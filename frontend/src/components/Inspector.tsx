@@ -38,7 +38,11 @@ export function Inspector({
     [result, setResult] = useState<Comparison | null>(null),
     [error, setError] = useState(''),
     [loading, setLoading] = useState(false);
-  const profileVariables = dataset.variables.filter((v) => v.id !== 'current_speed');
+  const profileVariables = dataset.variables.filter(
+    (v) =>
+      v.id !== 'current_speed' &&
+      (!selected?.available_variables || selected.available_variables.includes(v.id)),
+  );
   useEffect(() => {
     if (!profileVariables.some((v) => v.id === profileVariable) && profileVariables.length)
       setProfileVariable(profileVariables[0].id);
@@ -106,10 +110,35 @@ export function Inspector({
             </div>
             <div>
               <dt>Maximum depth</dt>
-              <dd>{selected.max_depth.toLocaleString()} m</dd>
+              <dd>{Math.round(selected.max_depth).toLocaleString()} m</dd>
             </div>
           </dl>
-          {selected.synthetic && <div className="synthetic-note">SYNTHETIC INSTRUMENT PROFILE</div>}
+          {selected.synthetic ? (
+            <div className="synthetic-note">SYNTHETIC INSTRUMENT PROFILE</div>
+          ) : (
+            <div className="real-profile-note">
+              <strong>MEASURED {selected.instrument_type} PROFILE</strong>
+              {selected.wmo && (
+                <p>
+                  WMO {selected.wmo} · Cycle {selected.cycle} ·{' '}
+                  {selected.data_mode === 'D' ? 'Delayed mode' : 'Adjusted real-time'}
+                </p>
+              )}
+              <p>
+                {selected.wmo
+                  ? 'Adjusted data · QC 1 only · TEOS-10 depth conversion'
+                  : `Source: ${selected.source_name}. Uploaded measurements; provenance supplied by uploader.`}
+              </p>
+              {selected.source_url?.startsWith('https://data-argo.ifremer.fr/') && (
+                <a href={selected.source_url} target="_blank" rel="noreferrer">
+                  Source: {selected.source_name}
+                </a>
+              )}
+              {selected.retrieved_date && (
+                <p>Archived snapshot · retrieved {selected.retrieved_date}</p>
+              )}
+            </div>
+          )}
           <div className="profile-tabs">
             {profileVariables.map((v) => (
               <button
@@ -130,6 +159,12 @@ export function Inspector({
             <span>Compare with model</span>
             <Layers size={14} />
           </label>
+          {!selected.synthetic && dataset.synthetic && (
+            <p className="synthetic-note">
+              Synthetic model: illustrative comparison, not forecast validation. Argo temperature is
+              in-situ.
+            </p>
+          )}
           {loading ? (
             <div className="chart-message">
               <span className="spinner" />
@@ -165,6 +200,7 @@ export function Inspector({
                     <YAxis
                       type="number"
                       dataKey="depth"
+                      tickFormatter={(value: number) => Math.round(value).toLocaleString()}
                       domain={[0, selected.max_depth]}
                       tick={{ fill: '#91a4b5', fontSize: 10 }}
                       tickLine={false}
@@ -251,7 +287,7 @@ export function Inspector({
                       </>
                     ) : (
                       <>
-                        Model time is {Math.abs(result.time_offset_hours)} h{' '}
+                        Model time is {Number(Math.abs(result.time_offset_hours).toFixed(1))} h{' '}
                         {result.time_offset_hours > 0 ? 'after' : 'before'} this profile
                       </>
                     )}

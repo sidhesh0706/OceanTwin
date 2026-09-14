@@ -1,0 +1,27 @@
+{
+  "source_url": "https://data-argo.ifremer.fr/geo/indian_ocean/2026/02/20260212_prof.nc",
+  "retrieval_date_utc": "2026-09-13",
+  "sha256": "6322e371a343b4f209c515d8af0a83870686762a21caf5bf90b9bf9923520abf",
+  "profile_count": 17,
+  "ids": [
+    "ARGO-4903973-003-A",
+    "ARGO-1902656-046-A",
+    "ARGO-2902765-220-A",
+    "ARGO-5907151-017-A",
+    "ARGO-1902201-279-A",
+    "ARGO-5902493-342-A",
+    "ARGO-1901765-143-A",
+    "ARGO-1901767-092-A",
+    "ARGO-1902458-098-A",
+    "ARGO-5906970-125-A",
+    "ARGO-1901768-072-A",
+    "ARGO-2903464-094-A",
+    "ARGO-7902131-043-A",
+    "ARGO-5906500-141-A",
+    "ARGO-3902755-003-A",
+    "ARGO-5902491-342-A",
+    "ARGO-2903875-045-A"
+  ],
+  "citation": "https://doi.org/10.17882/42182",
+  "selection": "Core adjusted A/D profiles, 28S to 28N, 40E to 105E; QC 1 only; at least 10 temperature samples."
+}

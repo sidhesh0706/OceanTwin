@@ -1,9 +1,10 @@
+import { extractIsosurface } from './isosurface';
 import { useEffect, useMemo, useRef } from 'react';
 import { useFrame, type ThreeEvent } from '@react-three/fiber';
 import * as THREE from 'three';
 import type { Dataset, Field, Mode, Variable, Land } from '../types';
 import { projection, depthY } from './coordinates';
-import { dataColor } from './colors';
+import { dataColor, useColorSettings } from './colors';
 import { paintContinuousField } from '../cesium/ScientificField';
 
 interface Props {
@@ -24,6 +25,7 @@ export function SectionCurtain({
   exaggeration,
   edge = 'south',
 }: Props & { edge?: 'south' | 'east' }) {
+  const colorSettings = useColorSettings();
   const geometry = useMemo(() => {
     const p = projection(dataset),
       layers = field.values as (number | null)[][][];
@@ -61,7 +63,7 @@ export function SectionCurtain({
     geo.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
     geo.setIndex(indices);
     return geo;
-  }, [dataset, field, variable, range, exaggeration, edge]);
+  }, [colorSettings, dataset, field, variable, range, exaggeration, edge]);
   useEffect(() => () => geometry.dispose(), [geometry]);
   return (
     <mesh geometry={geometry}>
@@ -85,6 +87,7 @@ export function Slice({
   onInspect,
   land,
 }: Props & { land: Land | null; onInspect: (lat: number, lon: number) => void }) {
+  const colorSettings = useColorSettings();
   const group = useRef<THREE.Group>(null);
   const project = projection(dataset);
   const texture = useMemo(() => {
@@ -105,7 +108,7 @@ export function Slice({
     map.colorSpace = THREE.SRGBColorSpace;
     map.anisotropy = 4;
     return map;
-  }, [field, variable, range, land]);
+  }, [colorSettings, field, variable, range, land]);
   useEffect(() => () => texture.dispose(), [texture]);
   useFrame((_, dt) => {
     if (group.current)
@@ -156,17 +159,35 @@ export function Volume({
   mode,
   threshold,
 }: Props & { mode: Mode; threshold: number }) {
+  const colorSettings = useColorSettings();
   const geo = useMemo(() => {
     const project = projection(dataset),
       layers = field.values as (number | null)[][][];
     const positions: number[] = [],
       colors: number[] = [];
     const color = new THREE.Color();
-    const tolerance = (range[1] - range[0]) * 0.025;
+    if (mode === 'iso') {
+      const raw = extractIsosurface(
+        layers,
+        field.longitudes,
+        field.latitudes,
+        field.depths,
+        threshold,
+      );
+      for (let i = 0; i < raw.length; i += 3)
+        positions.push(project.x(raw[i]), depthY(raw[i + 2], exaggeration), project.z(raw[i + 1]));
+      dataColor(threshold, variable, ...range, color);
+      for (let i = 0; i < positions.length; i += 3) colors.push(color.r, color.g, color.b);
+      const mesh = new THREE.BufferGeometry();
+      mesh.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+      mesh.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+      mesh.computeVertexNormals();
+      return mesh;
+    }
     layers.forEach((layer, k) =>
       layer.forEach((row, j) =>
         row.forEach((value, i) => {
-          if (value === null || (mode === 'iso' && Math.abs(value - threshold) > tolerance)) return;
+          if (value === null) return;
           positions.push(
             project.x(field.longitudes[i]),
             depthY(field.depths[k], exaggeration),
@@ -181,7 +202,7 @@ export function Volume({
     g.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
     g.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
     return g;
-  }, [dataset, field, variable, range, exaggeration, mode, threshold]);
+  }, [colorSettings, dataset, field, variable, range, exaggeration, mode, threshold]);
   useEffect(() => () => geo.dispose(), [geo]);
   const material = useMemo(
     () =>
@@ -200,5 +221,17 @@ export function Volume({
   );
   useEffect(() => () => material.dispose(), [material]);
   material.uniforms.alpha.value = opacity;
+  if (mode === 'iso')
+    return (
+      <mesh geometry={geo}>
+        <meshStandardMaterial
+          vertexColors
+          side={THREE.DoubleSide}
+          transparent
+          opacity={opacity}
+          roughness={0.7}
+        />
+      </mesh>
+    );
   return <points geometry={geo} material={material} frustumCulled={false} />;
 }

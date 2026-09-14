@@ -3460,3 +3460,20 @@ input[type='number'] {
     animation: none;
   }
 }
+.real-profile-note {
+  padding: 10px;
+  margin: 12px 0;
+  border: 1px solid #327b70;
+  border-radius: 6px;
+  background: #0c2928;
+  color: #a8d9cd;
+  font-size: 11px;
+  line-height: 1.5;
+}
+.real-profile-note strong,
+.real-profile-note a {
+  color: #76ebd2;
+}
+.real-profile-note p {
+  margin: 6px 0;
+}

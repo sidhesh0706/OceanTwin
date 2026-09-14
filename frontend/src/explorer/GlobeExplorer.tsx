@@ -5,7 +5,7 @@ import { loadCesium } from '../cesium/loadCesium';
 import { applyBathymetry } from '../cesium/CesiumLayers';
 import { syncObservationEntities } from '../cesium/CesiumObservations';
 import { readEnv } from '../experience/experienceState';
-import { dataColor } from '../ocean/colors';
+import { dataColor, useColorSettings } from '../ocean/colors';
 import { paintContinuousField, paintGlobalOcean } from '../cesium/ScientificField';
 import { sample } from '../ocean/CurrentParticles';
 import type { CameraPreset, Dataset, Frame, Mode, Observation, Variable, Land } from '../types';
@@ -45,6 +45,7 @@ import {
 } from '../cesium/GeographicCoordinates';
 
 export default function GlobeExplorer(props: Props) {
+  const colorSettings = useColorSettings();
   const { enabled } = props;
   const [coastline, setCoastline] = useState<Land | null>(null);
   useEffect(() => {
@@ -556,7 +557,17 @@ export default function GlobeExplorer(props: Props) {
     } catch {
       /* A bad frame must not break the globe. */
     }
-  }, [frame, variable, mode, range, opacity, coastline, globeReady, props.showField]);
+  }, [
+    colorSettings,
+    frame,
+    variable,
+    mode,
+    range,
+    opacity,
+    coastline,
+    globeReady,
+    props.showField,
+  ]);
 
   // ── Domain outline (Regional datasets only, never global) ──────────────
   useEffect(() => {
@@ -724,6 +735,7 @@ export default function GlobeExplorer(props: Props) {
       /* A bad frame must not break the globe. */
     }
   }, [
+    colorSettings,
     frame,
     variable,
     mode,
