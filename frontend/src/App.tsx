@@ -61,7 +61,7 @@ export default function App({
   const [threshold, setThreshold] = useState(20);
   const [argo, setArgo] = useState(true);
   const [gliders, setGliders] = useState(true);
-  const [currents, setCurrents] = useState(true);
+  const [currents, setCurrents] = useState(false);
   const [grid, setGrid] = useState(false);
   const [density, setDensity] = useState(1200);
   const [frame, setFrame] = useState<Frame | null>(null);
@@ -172,7 +172,9 @@ export default function App({
       setInspection(null);
       setPlaying(false);
       setMode('slice');
-      setCurrents(d.has_currents);
+      // Keep the map visually clean on load. Current vectors remain available
+      // as an explicit layer in Settings and through Current Field mode.
+      setCurrents(false);
       volumeCache.current.clear();
       setRevision((v) => v + 1);
     } catch (e) {
