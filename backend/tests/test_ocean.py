@@ -256,7 +256,7 @@ def test_ingestion_rejects_unsupported_files(tmp_path, change):
         NetCDFDatasetAdapter(path)
 
 
-def test_upload_is_atomic_and_real_dataset_has_no_demo_sensors(client, tmp_path):
+def test_upload_is_atomic_and_creates_model_inspection_stations(client, tmp_path):
     try:
         response = client.post(
             "/api/datasets/upload",
@@ -274,7 +274,12 @@ def test_upload_is_atomic_and_real_dataset_has_no_demo_sensors(client, tmp_path)
         )
         assert response.status_code == 200
         assert response.json()["synthetic"] is False
-        assert client.get("/api/observations").json() == []
+        stations = client.get("/api/observations").json()
+        assert len(stations) == 5
+        assert all(s["model_station"] and s["id"].startswith("MODEL-STATION-") for s in stations)
+        profile = client.get(f'/api/ocean/profile?latitude={stations[0]["latitude"]}&longitude={stations[0]["longitude"]}&time=0')
+        assert profile.status_code == 200
+        assert any(row["temperature"] is not None for row in profile.json()["profiles"])
         assert client.get("/api/currents").status_code == 422
         assert client.get("/api/ocean/slice?depth=50").status_code == 200
     finally:

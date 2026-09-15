@@ -212,8 +212,9 @@ export function RightPanel({
                 <button key={o.id} onClick={() => onSelect(o)}>
                   {o.id}
                   <small>
-                    {o.instrument_type} · {Math.round(o.max_depth)} m ·{' '}
-                    {o.synthetic ? 'Synthetic' : 'Measured'}
+                    {o.model_station ? 'NetCDF station' : o.instrument_type} ·{' '}
+                    {Math.round(o.max_depth)} m ·{' '}
+                    {o.model_station ? 'Model profile' : o.synthetic ? 'Synthetic' : 'Measured'}
                   </small>
                 </button>
               ))}

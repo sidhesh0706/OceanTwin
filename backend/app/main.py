@@ -274,6 +274,7 @@ def upload(file: Annotated[UploadFile, File()]):
                     )
                 dest.write(chunk)
         candidate = OceanService(path, None)
+        candidate.observations = candidate.create_model_stations()
         with lock:
             service = candidate
             load_error = None

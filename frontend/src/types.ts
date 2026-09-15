@@ -75,6 +75,7 @@ export interface Observation {
   retrieved_date?: string | null;
   available_variables?: Variable[] | null;
   ocean_basin?: string | null;
+  model_station?: boolean;
 }
 export interface Comparison {
   instrument_id: string;

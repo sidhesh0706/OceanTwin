@@ -415,7 +415,7 @@ export default function App({
       setUploadNotice(
         'profiles' in loaded
           ? `${file.name}: ${loaded.profiles} profiles loaded. Ocean fields are unchanged.`
-          : `${file.name}: ${loaded.name}, ${loaded.times.length} time frames. Fields now come from this file. Upload observation CSV separately, or restore the historical dataset.`,
+          : `${file.name}: ${loaded.name}, ${loaded.times.length} time frames. Five clickable NetCDF inspection stations now open detailed local water-column views.`,
       );
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Unable to load this NetCDF file.');

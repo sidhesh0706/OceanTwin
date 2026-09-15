@@ -35,3 +35,4 @@ class ObservationSource(BaseModel):
     depth_method: str | None = None
     available_variables: list[str] | None = None
     ocean_basin: str | None = None
+    model_station: bool = False

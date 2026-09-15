@@ -21,6 +21,47 @@ class OceanService:
                 for o in json.loads(observations_path.read_text())
             ]
 
+    def create_model_stations(self, count: int = 5):
+        """Create clickable profile stations from wet cells in an uploaded model."""
+        ds = self.adapter.ds
+        surface = ds[self.adapter.variables[0]].isel(time=0, depth=0).values
+        wet = np.argwhere(np.isfinite(surface))
+        if not len(wet):
+            return []
+        targets = [(0.2, 0.25), (0.2, 0.75), (0.5, 0.5), (0.8, 0.25), (0.8, 0.75)]
+        lat_values, lon_values = ds.latitude.values, ds.longitude.values
+        stations = []
+        for number, (fy, fx) in enumerate(targets[:count], 1):
+            target_y = fy * (len(lat_values) - 1)
+            target_x = fx * (len(lon_values) - 1)
+            index = wet[np.argmin((wet[:, 0] - target_y) ** 2 + (wet[:, 1] - target_x) ** 2)]
+            iy, ix = map(int, index)
+            column = ds.isel(time=0, latitude=iy, longitude=ix)
+            profiles = []
+            available = []
+            for variable in ('temperature', 'salinity', 'chlorophyll'):
+                if variable in column and np.isfinite(column[variable].values).any():
+                    available.append(variable)
+            for iz, depth in enumerate(ds.depth.values):
+                row = {'depth': float(depth)}
+                for variable in available:
+                    value = float(column[variable].isel(depth=iz))
+                    row[variable] = round(value, 5) if np.isfinite(value) else None
+                profiles.append(row)
+            stations.append({
+                'id': f'MODEL-STATION-{number:02d}',
+                'instrument_type': 'CTD',
+                'latitude': float(lat_values[iy]),
+                'longitude': float(lon_values[ix]),
+                'timestamp': self.adapter.times()[0],
+                'synthetic': False,
+                'model_station': True,
+                'source_name': 'Uploaded NetCDF model field',
+                'available_variables': available,
+                'profiles': profiles,
+            })
+        return [ObservationSource.model_validate(o).model_dump() for o in stations]
+
     def observation(self, instrument_id):
         obs = next((o for o in self.observations if o["id"] == instrument_id), None)
         if obs is None:

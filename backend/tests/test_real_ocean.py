@@ -36,7 +36,15 @@ def test_real_sample_upload_changes_dataset_and_serves_file_values():
         loaded = response.json()
         assert loaded['id'] != before['id'] and not loaded['synthetic']
         assert len(loaded['times']) == 1 and loaded['times'][0].startswith('2026-02-13')
-        assert client.get('/api/observations').json() == []
+        stations = client.get('/api/observations').json()
+        assert len(stations) == 5
+        assert all(row['model_station'] for row in stations)
+        station = stations[2]
+        profile = client.get(
+            f'/api/ocean/profile?latitude={station["latitude"]}&longitude={station["longitude"]}&time=0'
+        )
+        assert profile.status_code == 200
+        assert len(profile.json()['profiles']) == loaded['grid']['depth']
         for variable in ['temperature', 'salinity', 'chlorophyll', 'current_speed']:
             result = client.get(f'/api/ocean/slice?variable={variable}&time=0&depth=0')
             assert result.status_code == 200, result.text

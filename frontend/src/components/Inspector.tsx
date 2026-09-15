@@ -60,8 +60,27 @@ export function Inspector({
     setLoading(true);
     setResult(null);
     setError('');
-    api
-      .compare(selected.id, profileVariable, field.time, controller.signal)
+    const profileRequest = selected.model_station
+      ? api
+          .profile(selected.latitude, selected.longitude, field.time, controller.signal)
+          .then((profile) => ({
+            instrument_id: selected.id,
+            variable: profileVariable,
+            units: profile.variables[profileVariable] ?? '',
+            profiles: profile.profiles.map((row) => ({
+              depth: Number(row.depth),
+              model: row[profileVariable] ?? null,
+              observed: null,
+            })),
+            method: 'Depth profile sampled directly from the uploaded NetCDF model field.',
+            model_time: profile.timestamp,
+            observation_time: profile.timestamp,
+            time_offset_hours: 0,
+            matched_samples: 0,
+            metrics: null,
+          }))
+      : api.compare(selected.id, profileVariable, field.time, controller.signal);
+    profileRequest
       .then(setResult)
       .catch((e) => {
         if (!controller.signal.aborted) setError(e.message);
@@ -103,7 +122,11 @@ export function Inspector({
               )}
             </span>
             <div>
-              <span className="eyebrow">{selected.instrument_type} PROFILE</span>
+              <span className="eyebrow">
+                {selected.model_station
+                  ? 'NETCDF INSPECTION STATION'
+                  : `${selected.instrument_type} PROFILE`}
+              </span>
               <h2>{selected.id}</h2>
             </div>
           </div>
@@ -120,7 +143,12 @@ export function Inspector({
               <dd>{Math.round(selected.max_depth).toLocaleString()} m</dd>
             </div>
           </dl>
-          {selected.synthetic ? (
+          {selected.model_station ? (
+            <div className="real-profile-note">
+              <strong>UPLOADED MODEL WATER COLUMN</strong>
+              <p>Values are sampled directly from the active NetCDF file at this map location.</p>
+            </div>
+          ) : selected.synthetic ? (
             <div className="synthetic-note">SYNTHETIC INSTRUMENT PROFILE</div>
           ) : (
             <div className="real-profile-note">
@@ -171,16 +199,18 @@ export function Inspector({
               so no local water-column transition or model comparison is available.
             </p>
           )}
-          <label className="comparison-toggle">
-            <input
-              type="checkbox"
-              checked={compare}
-              disabled={!insideModelDomain}
-              onChange={(e) => setCompare(e.target.checked)}
-            />
-            <span>Compare with model</span>
-            <Layers size={14} />
-          </label>
+          {!selected.model_station && (
+            <label className="comparison-toggle">
+              <input
+                type="checkbox"
+                checked={compare}
+                disabled={!insideModelDomain}
+                onChange={(e) => setCompare(e.target.checked)}
+              />
+              <span>Compare with model</span>
+              <Layers size={14} />
+            </label>
+          )}
           {!selected.synthetic && dataset.synthetic && (
             <p className="synthetic-note">
               Synthetic model: illustrative comparison, not forecast validation. Argo temperature is
