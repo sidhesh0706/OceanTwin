@@ -86,7 +86,7 @@ export default function LandingHUD({
               </small>
             </span>
           ))}
-          <em>{dataset.synthetic ? 'SYNTHETIC DEMONSTRATION DATASET' : 'LOCAL DATA'}</em>
+          <em>{dataset.synthetic ? 'SYNTHETIC MODEL' : 'LOCAL DATA'}</em>
         </div>
       )}
 
@@ -114,7 +114,15 @@ export default function LandingHUD({
               </div>
             </>
           )}
-          {dataset?.synthetic && <em>SYNTHETIC INSTRUMENT PROFILES</em>}
+          {selected && (
+            <em>
+              {selected.synthetic === true
+                ? 'SYNTHETIC PROFILE'
+                : selected.synthetic === false
+                  ? 'MEASURED PROFILE'
+                  : 'INSTRUMENT PROFILE'}
+            </em>
+          )}
         </div>
       )}
     </div>

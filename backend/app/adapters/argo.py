@@ -12,15 +12,16 @@ def text(value):
     return ''.join(a.astype(str).ravel()).strip()
 
 
-def import_argo(path: Path, source_url: str, retrieved_date: str):
+def import_argo(path: Path, source_url: str, retrieved_date: str, bounds=None):
     observations = []
     with xr.open_dataset(path) as ds:
         for i in range(ds.sizes['N_PROF']):
             p = ds.isel(N_PROF=i)
             lat, lon = float(p.LATITUDE), float(p.LONGITUDE)
             mode = text(p.DATA_MODE.values)
-            # This curated demo uses only adjusted core profiles in the Indian Ocean.
-            if not (-28 <= lat <= 28 and 40 <= lon <= 105) or mode not in ('A', 'D'):
+            if bounds and not (bounds[0] <= lat <= bounds[1] and bounds[2] <= lon <= bounds[3]):
+                continue
+            if mode not in ('A', 'D'):
                 continue
             if text(p.POSITION_QC.values) != '1' or text(p.JULD_QC.values) != '1' or np.isnat(p.JULD.values):
                 continue

@@ -3,10 +3,12 @@ import './ocean-intro.css';
 export default function OceanIntro({
   ready,
   synthetic,
+  measuredCount,
   onEnter,
 }: {
   ready: boolean;
   synthetic: boolean;
+  measuredCount: number;
   onEnter: () => void;
 }) {
   return (
@@ -49,7 +51,8 @@ export default function OceanIntro({
         </div>
       </div>
       <footer className="intro-footer">
-        <span>{synthetic ? 'SYNTHETIC DEMO DATA' : 'LOCAL MODEL DATA'}</span>
+        <span>{measuredCount} MEASURED PROFILES</span>
+        <span>{synthetic ? 'SYNTHETIC MODEL' : 'LOCAL MODEL DATA'}</span>
         <span>NASA Earth imagery · Scientific model overlays</span>
       </footer>
     </section>

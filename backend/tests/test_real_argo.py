@@ -12,9 +12,13 @@ ROOT=Path(__file__).resolve().parents[2]
 
 def test_argo_snapshot_matches_original_adjusted_measurements():
     rows=json.loads((ROOT/'backend/data/real_argo.json').read_text())
-    assert len(rows)==17 and all(not r['synthetic'] for r in rows)
-    with xr.open_dataset(ROOT/'data_sources/argo/20260212_prof.nc') as ds:
-        for row in rows:
+    assert len(rows)==54 and all(not r['synthetic'] for r in rows)
+    assert {r['ocean_basin'] for r in rows} == {'Indian', 'Atlantic', 'Pacific'}
+    files = {'indian_ocean':'20260212_prof.nc', 'atlantic_ocean':'20260212_atlantic_prof.nc',
+             'pacific_ocean':'20260212_pacific_prof.nc'}
+    for ocean, filename in files.items():
+      with xr.open_dataset(ROOT/'data_sources/argo'/filename) as ds:
+        for row in (r for r in rows if ocean in r['source_url']):
             p=ds.isel(N_PROF=row['source_profile_index'])
             assert row['latitude']==float(p.LATITUDE)
             assert row['longitude']==float(p.LONGITUDE)
@@ -45,9 +49,9 @@ def test_real_catalogue_and_atomic_observation_upload():
     with TestClient(app) as c:
         assert c.post('/api/datasets/real-argo').status_code==200
         obs=c.get('/api/observations').json()
-        assert len(obs)==17 and obs[0]['source_url'].startswith('https://data-argo.ifremer.fr/')
+        assert len(obs)==54 and obs[0]['source_url'].startswith('https://data-argo.ifremer.fr/')
         first=obs[0]['id']
-        comparison=c.get(f'/api/compare/{first}?time=6').json()
+        comparison=c.get(f'/api/compare/{first}?time=1').json()
         assert any(r['observed'] is not None for r in comparison['profiles'])
         assert c.post('/api/observations/upload',files={'file':('bad.csv',b'invalid')}).status_code==422
         assert c.get('/api/observations').json()[0]['id']==first

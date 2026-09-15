@@ -1177,7 +1177,7 @@ function flyToPreset(
   } else if (p.preset === 'approach') {
     flight = { lon: ext.centerLon, lat: ext.centerLat + 6, h: 11_000_000, pitch: -75 };
   } else if (p.preset === 'domain') {
-    flight = { lon: ext.centerLon, lat: ext.centerLat, h: 5_500_000, pitch: -80 };
+    flight = { lon: ext.centerLon, lat: ext.centerLat, h: 5_500_000, pitch: -90 };
   } else if (p.preset === 'surface') {
     flight = { lon: ext.centerLon, lat: ext.centerLat, h: 1_800_000, pitch: -90 };
   } else {

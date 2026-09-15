@@ -16,13 +16,13 @@ DATA = Path(__file__).resolve().parents[1] / "data"
 
 @pytest.fixture(scope="module")
 def client():
-    with patch.dict("os.environ", {"OCEANTWIN_OBSERVATIONS": str(DATA / "observations.json")}), TestClient(app) as c:
+    with patch.dict("os.environ", {"OCEANTWIN_DATASET": str(DATA / "synthetic_test_ocean.nc"), "OCEANTWIN_OBSERVATIONS": str(DATA / "observations.json")}), TestClient(app) as c:
         yield c
 
 
 @pytest.fixture(scope="module")
 def model():
-    return OceanService(DATA / "demo_ocean.nc", DATA / "observations.json")
+    return OceanService(DATA / "synthetic_test_ocean.nc", DATA / "observations.json")
 
 
 def test_metadata_and_bundled_data(client):
@@ -278,7 +278,7 @@ def test_upload_is_atomic_and_real_dataset_has_no_demo_sensors(client, tmp_path)
         assert client.get("/api/currents").status_code == 422
         assert client.get("/api/ocean/slice?depth=50").status_code == 200
     finally:
-        assert client.post("/api/datasets/demo").status_code == 200
+        assert client.post("/api/datasets/real-argo").status_code == 200
 
 
 def test_cors_local_development(client):

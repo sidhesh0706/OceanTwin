@@ -29,7 +29,6 @@ interface Props {
   threshold: number;
   setThreshold: (n: number) => void;
   onUpload: () => void;
-  onDemo: () => void;
   onCollapse: () => void;
   uploading: boolean;
 }
@@ -212,7 +211,7 @@ export function Controls(p: Props) {
           <div className="section-title scale-heading">
             <span
               className="eyebrow"
-              title="Schematic depth scale. At 5×, depth is roughly 612× physical scale for the demo domain."
+              title="Schematic depth scale. At 5×, depth is roughly 612× physical scale for this regional domain."
             >
               VERTICAL DISPLAY SCALE
             </span>
@@ -307,11 +306,6 @@ export function Controls(p: Props) {
           {p.uploading ? 'Reading NetCDF…' : 'Load NetCDF dataset'}
           <span>.nc</span>
         </button>
-        {!p.dataset.synthetic && (
-          <button className="text-button" onClick={p.onDemo}>
-            Restore demo model
-          </button>
-        )}
       </div>
     </aside>
   );

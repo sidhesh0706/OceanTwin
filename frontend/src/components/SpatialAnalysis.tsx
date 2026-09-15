@@ -309,8 +309,8 @@ export function SpatialAnalysis({
         </>
       )}
       <p className="sa-method">
-        {dataset.synthetic ? 'Synthetic demonstration model.' : 'Local model.'} Linear interpolation
-        preserves missing samples.
+        {dataset.synthetic ? 'Synthetic model.' : 'Local model.'} Linear interpolation preserves
+        missing samples.
       </p>
     </section>
   );

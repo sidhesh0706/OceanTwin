@@ -91,6 +91,17 @@ export function RightPanel({
         </div>
 
         {/* Colorbar */}
+        <p className="rp-source-note">{meta.source_name || dataset.source || 'Uploaded NetCDF'}</p>
+        {meta.surface_only && (
+          <p className="rp-source-note">
+            {meta.sampling_note || 'Surface-only observations. Missing pixels remain open.'}
+          </p>
+        )}
+        {variable === 'current_speed' && (
+          <p className="rp-source-note">
+            Derived from model eastward/northward currents; not measured by these Argo floats.
+          </p>
+        )}
         <div className="rp-colorbar">
           <div
             className="rp-colorbar-bar"
@@ -119,6 +130,7 @@ export function RightPanel({
             className={mode === 'volume' ? 'active' : ''}
             onClick={() => onMode('volume')}
             aria-label="3D volume mode"
+            disabled={meta.surface_only}
           >
             <Box size={13} />
             <span>3D Volume</span>
@@ -146,6 +158,7 @@ export function RightPanel({
         </div>
         <input
           aria-label="Depth"
+          disabled={meta.surface_only}
           type="range"
           min={dataset.bounds.depth[0]}
           max={dataset.bounds.depth[1]}
@@ -216,7 +229,7 @@ export function RightPanel({
             {dataset.synthetic
               ? dataset.global
                 ? 'Global Ocean Model · 3D Digital Twin'
-                : 'Ocean Model · Demo Domain'
+                : 'Ocean Model · Regional Domain'
               : dataset.name}
           </span>
           <span className="rp-active-badge">
@@ -231,7 +244,12 @@ export function RightPanel({
           </div>
           <div>
             <dt>Grid</dt>
-            <dd>{Object.values(dataset.grid).join(' × ')}</dd>
+            <dd>
+              {['time', 'depth', 'latitude', 'longitude']
+                .map((key) => dataset.grid[key])
+                .join(' × ')}{' '}
+              (T × Z × Y × X)
+            </dd>
           </div>
           <div>
             <dt>Domain</dt>

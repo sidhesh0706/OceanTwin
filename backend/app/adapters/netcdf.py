@@ -168,6 +168,8 @@ class NetCDFDatasetAdapter:
                 self.ds["current_speed"] = np.hypot(
                     self.ds.u_current, self.ds.v_current
                 )
+            if "current_speed" in self.ds:
+                self.ds["current_speed"].attrs.update(source_name=self.ds.u_current.attrs.get("source_name", "Model velocity components"), sampling_note="Speed = sqrt(u^2 + v^2); model current speed, not a float measurement.")
             self.path = path
             self.variables = [
                 v for v in self.ds.data_vars if v not in ("u_current", "v_current")
@@ -297,10 +299,14 @@ class NetCDFDatasetAdapter:
                     "name": v.replace("_", " ").title(),
                     "units": UNITS[v],
                     "range": self.ranges[v],
+                    "source_name": self.ds[v].attrs.get("source_name", self.ds.attrs.get("source", "Uploaded NetCDF")),
+                    "surface_only": str(self.ds[v].attrs.get("surface_only", "false")).lower() == "true",
+                    "sampling_note": self.ds[v].attrs.get("sampling_note", ""),
                 }
                 for v in self.variables
             ],
             "times": self.times(),
             "depths": self.ds.depth.values.tolist(),
             "has_currents": "current_speed" in self.variables,
+            "source": str(self.ds.attrs.get("source", "Uploaded NetCDF")),
         }

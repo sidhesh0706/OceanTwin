@@ -43,6 +43,13 @@ export function Inspector({
       v.id !== 'current_speed' &&
       (!selected?.available_variables || selected.available_variables.includes(v.id)),
   );
+  const insideModelDomain = selected
+    ? selected.latitude >= dataset.bounds.latitude[0] &&
+      selected.latitude <= dataset.bounds.latitude[1] &&
+      (dataset.global ||
+        (selected.longitude >= dataset.bounds.longitude[0] &&
+          selected.longitude <= dataset.bounds.longitude[1]))
+    : true;
   useEffect(() => {
     if (!profileVariables.some((v) => v.id === profileVariable) && profileVariables.length)
       setProfileVariable(profileVariables[0].id);
@@ -150,10 +157,25 @@ export function Inspector({
               </button>
             ))}
           </div>
+          {selected.instrument_type === 'ARGO' &&
+            !selected.available_variables?.includes('chlorophyll') && (
+              <p className="synthetic-note">
+                This core Argo profile records temperature and salinity. Chlorophyll is a separate
+                satellite surface layer; current speed is derived from model velocities. Neither is
+                a measurement from this float.
+              </p>
+            )}
+          {!insideModelDomain && (
+            <p className="synthetic-note">
+              Global Argo profile view. This float is outside the active Indian Ocean model subset,
+              so no local water-column transition or model comparison is available.
+            </p>
+          )}
           <label className="comparison-toggle">
             <input
               type="checkbox"
               checked={compare}
+              disabled={!insideModelDomain}
               onChange={(e) => setCompare(e.target.checked)}
             />
             <span>Compare with model</span>
@@ -404,7 +426,9 @@ export function Inspector({
           )}
           <div className="context-footnote">
             <span className="tiny-dot" />
-            {dataset.synthetic ? 'Analytic model · simulated observations' : 'Local NetCDF dataset'}
+            {dataset.synthetic
+              ? 'Synthetic model · separate observation sources'
+              : 'Local NetCDF dataset'}
           </div>
         </div>
       )}

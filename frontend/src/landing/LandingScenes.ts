@@ -38,7 +38,7 @@ export const LANDING_SCENES: LandingSceneDef[] = [
     id: 'observations',
     eyebrow: 'MODEL + IN-SITU OBSERVATIONS',
     title: 'Models propose. Measurements verify.',
-    body: 'Argo floats and gliders hold the model accountable. Synthetic demonstration profiles — designed for future operational integration. Errors are calculated, never invented.',
+    body: 'Explore instrument profiles alongside model fields. Each profile carries its own provenance. Comparisons report calculated errors and the model time offset.',
     tint: 0,
   },
   {

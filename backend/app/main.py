@@ -28,11 +28,7 @@ load_error: str | None = None
 async def lifespan(_app):
     global service, load_error
     try:
-        path = Path(os.environ.get("OCEANTWIN_DATASET", ROOT / "data/demo_ocean.nc"))
-        if not path.exists() and "OCEANTWIN_DATASET" not in os.environ:
-            from backend.scripts.generate_demo_data import generate
-
-            generate()
+        path = Path(os.environ.get("OCEANTWIN_DATASET", ROOT / "data/real_ocean.nc"))
         observations = (
             Path(os.environ["OCEANTWIN_OBSERVATIONS"])
             if "OCEANTWIN_OBSERVATIONS" in os.environ
@@ -292,23 +288,11 @@ def upload(file: Annotated[UploadFile, File()]):
             path.unlink(missing_ok=True)
 
 
-@app.post("/api/datasets/demo")
-def restore_demo():
-    global service, load_error
-    candidate = OceanService(
-        ROOT / "data/demo_ocean.nc", ROOT / "data/observations.json"
-    )
-    with lock:
-        service, load_error = candidate, None
-    return candidate.adapter.metadata()
-
-
-
 @app.post('/api/datasets/real-argo')
 def restore_real_argo():
-    """Load the curated measured Argo snapshot with the explicitly synthetic model."""
+    """Load the historical HYCOM/MODIS fields and measured Argo snapshot."""
     global service, load_error
-    candidate = OceanService(ROOT / 'data/demo_ocean.nc', ROOT / 'data/real_argo.json')
+    candidate = OceanService(ROOT / 'data/real_ocean.nc', ROOT / 'data/real_argo.json')
     with lock:
         service, load_error = candidate, None
     return candidate.adapter.metadata()

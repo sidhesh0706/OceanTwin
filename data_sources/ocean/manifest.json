@@ -1,0 +1,31 @@
+{
+  "sources": [
+    {
+      "file": "hycom_t3z_20260211_13.nc",
+      "url": "https://tds.hycom.org/thredds/dodsC/ESPC-D-V02/t3z/2026",
+      "sha256": "1eab45a66631e4cd73acfb2543b0245bdbd1db30150e325724b1b5eb940031a1"
+    },
+    {
+      "file": "hycom_s3z_20260211_13.nc",
+      "url": "https://tds.hycom.org/thredds/dodsC/ESPC-D-V02/s3z/2026",
+      "sha256": "2227dd04affd57e513399b1859fe3d725d613126f8a5a3a7831d373fc22e46c3"
+    },
+    {
+      "file": "hycom_u3z_20260211_13.nc",
+      "url": "https://tds.hycom.org/thredds/dodsC/ESPC-D-V02/u3z/2026",
+      "sha256": "83cb9e65ce076e5b7bc905314abf9c10152443c4105ee6e818b05fb39692fe2c"
+    },
+    {
+      "file": "hycom_v3z_20260211_13.nc",
+      "url": "https://tds.hycom.org/thredds/dodsC/ESPC-D-V02/v3z/2026",
+      "sha256": "d92654a886307082606f2566fdb2280dce091cd7d9e8ce7416ecf099d2d02c04"
+    },
+    {
+      "file": "modis_chlorophyll_202602_monthly.nc",
+      "url": "https://coastwatch.pfeg.noaa.gov/erddap/griddap/erdMH1chlamday_R2022SQ.nc?chlor_a%5B(2026-02-15T00:00:00Z)%5D%5B(28):12:(-28)%5D%5B(40):12:(105)%5D",
+      "sha256": "d2acdc59ebf4a1af51a74138f092ceee7dab16f8ef8990d676a6cd791e86e696"
+    }
+  ],
+  "subset": "Historical Feb 11-13 2026 subset; HYCOM native nodes at stride 12; 36 depths to 2000 m; daily noon frames. February monthly satellite composite sampled nearest to model horizontal nodes only at depth 0; held fixed across model dates.",
+  "prepared_sha256": "7fd131c3a7aa7eab05083ee5b5a1030e66f7caee1afe8796491a4360cf421954"
+}

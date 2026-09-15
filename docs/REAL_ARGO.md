@@ -1,6 +1,8 @@
+> Current workspace: [real HYCOM model analysis and NASA chlorophyll](REAL_OCEAN.md).
+
 # Historical Argo data in OceanTwin
 
-The default viewer combines **17 measured Argo profiles** recorded on **12 February 2026** with the explicitly labelled synthetic global ocean model. This is an offline historical demonstration, not a live feed or an operational model validation.
+The default viewer combines **54 measured Argo profiles** recorded on **12 February 2026** with historical HYCOM analysis and NASA satellite surface chlorophyll. This is an offline historical demonstration, not a live feed or an operational model validation.
 
 ## Provenance and reproducibility
 
@@ -8,7 +10,7 @@ The default viewer combines **17 measured Argo profiles** recorded on **12 Febru
 - Preserved original: `data_sources/argo/20260212_prof.nc` (110 source profiles).
 - Retrieved: 13 September 2026. Source hash and selected IDs: `data_sources/argo/manifest.json`.
 - SHA-256: `6322e371a343b4f209c515d8af0a83870686762a21caf5bf90b9bf9923520abf`.
-- Curated catalogue: `backend/data/real_argo.json`, 17 profiles and 11,485 retained depth rows; individual variables can be missing after quality filtering.
+- Curated catalogue: `backend/data/real_argo.json`, 54 profiles and 37,357 retained depth rows; individual variables can be missing after quality filtering.
 - Upload-ready CSV: `data_sources/argo/real_argo_profiles.csv`.
 
 Selection uses core adjusted-real-time (A) or delayed-mode (D) profiles within 28°S–28°N and 40°E–105°E. Position and time must have QC 1. Adjusted pressure, temperature and salinity use QC 1 only. No raw-value fallback or fabricated chlorophyll is supplied. Each retained profile has at least ten valid temperature samples. The final A in a profile ID indicates ascending direction, not processing mode.
@@ -27,9 +29,9 @@ These observations are made freely available by the International Argo Program a
 
 1. Start the application, open Observations, and select `ARGO-4903973-003-A` (Arabian Sea) or `ARGO-2902765-220-A` (Bay of Bengal).
 2. The viewer transitions to the ocean and selects the nearest model date. Show the measured temperature/salinity profile, recording time, WMO number, processing mode and source.
-3. Model comparison starts disabled for measured observations. Enable it to demonstrate collocation, explicitly explaining that the current model is synthetic and the errors are illustrative, not evidence of forecast skill. The model time offset is shown.
+3. Model comparison starts disabled for measured observations. Enable it to demonstrate collocation, explicitly explaining that the current model is a historical assimilative analysis, so these comparisons are not independent forecast validation. The model time offset is shown.
 4. Use Top-down / 3D ocean, depth, currents, analysis and isosurface controls. The fields in these views come from the model, not interpolated Argo coverage.
-5. Settings → Real Argo + demo model restores this setup after uploads. Restore demo model selects the older fully synthetic catalogue.
+5. Settings → Load historical Argo restores this setup after uploads. Synthetic test fixtures remain in the repository but are not offered by the main interface.
 
 ## Observation uploads
 

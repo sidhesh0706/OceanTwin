@@ -50,7 +50,6 @@ interface Props {
   threshold: number;
   onThreshold: (n: number) => void;
   onUpload: () => void;
-  onDemo: () => void;
   onRealArgo: () => void;
   uploading: boolean;
   onTransect?: () => void;
@@ -232,6 +231,7 @@ export function ToolRail(p: Props) {
             </div>
             <input
               aria-label="Depth"
+              disabled={p.dataset.variables.find((v) => v.id === p.variable)?.surface_only}
               type="range"
               min={p.dataset.bounds.depth[0]}
               max={p.dataset.bounds.depth[1]}
@@ -247,6 +247,9 @@ export function ToolRail(p: Props) {
                     key={n}
                     className={p.depth === n ? 'active' : ''}
                     onClick={() => p.onDepth(n)}
+                    disabled={
+                      n > 0 && p.dataset.variables.find((v) => v.id === p.variable)?.surface_only
+                    }
                   >
                     {n === 0 ? 'SFC' : n}
                   </button>
@@ -344,6 +347,7 @@ export function ToolRail(p: Props) {
             <button
               className={`fp-iso-btn ${p.mode === 'iso' ? 'active' : ''}`}
               onClick={() => p.onMode(p.mode === 'iso' ? 'slice' : 'iso')}
+              disabled={p.dataset.variables.find((v) => v.id === p.variable)?.surface_only}
             >
               <ScanLine size={13} /> Isosurface mesh
             </button>
@@ -449,10 +453,7 @@ export function ToolRail(p: Props) {
               {p.uploading ? 'Reading…' : 'Load NetCDF / observation CSV'}
             </button>
             <button className="fp-text-btn" onClick={p.onRealArgo}>
-              Real Argo + demo model
-            </button>
-            <button className="fp-text-btn" onClick={p.onDemo}>
-              Restore demo model
+              Restore historical dataset
             </button>
           </div>
         </div>

@@ -34,3 +34,4 @@ class ObservationSource(BaseModel):
     qc_policy: str | None = None
     depth_method: str | None = None
     available_variables: list[str] | None = None
+    ocean_basin: str | None = None

@@ -4,6 +4,7 @@ import numpy as np
 import pytest
 import xarray as xr
 from fastapi.testclient import TestClient
+from unittest.mock import patch
 
 from backend.app.main import app
 from backend.app.services.ocean import OceanService
@@ -50,8 +51,9 @@ def test_statistics_match_known_grid_and_validate_bounds(analytic):
 
 
 def test_spatial_routes_and_seam():
-    with TestClient(app) as client:
-        assert client.post('/api/datasets/demo').status_code == 200
+    data = Path(__file__).resolve().parents[1] / 'data'
+    with patch.dict('os.environ', {'OCEANTWIN_DATASET': str(data / 'synthetic_test_ocean.nc'),
+                                   'OCEANTWIN_OBSERVATIONS': str(data / 'observations.json')}), TestClient(app) as client:
         for route in ('profile', 'inspect'):
             result = client.get(f'/api/ocean/{route}', params={'latitude': 0, 'longitude': 179})
             assert result.status_code == 200
@@ -64,7 +66,7 @@ def test_spatial_routes_and_seam():
 
 def test_regional_cutout_preserves_values_and_dateline():
     from backend.app.services.region import regional_view
-    service = OceanService(Path(__file__).resolve().parents[1] / 'data/demo_ocean.nc', Path(__file__).resolve().parents[1] / 'data/observations.json')
+    service = OceanService(Path(__file__).resolve().parents[1] / 'data/synthetic_test_ocean.nc', Path(__file__).resolve().parents[1] / 'data/observations.json')
     for lat, lon in [(-8.6, -140), (0, 179), (12, 65)]:
         view = regional_view(service, lat, lon, 'temperature', 6, 150)
         ds = view['dataset']

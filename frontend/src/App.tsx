@@ -1,3 +1,4 @@
+import { setColorSettings } from './ocean/colors';
 import { Suspense, lazy, useCallback, useEffect, useRef, useState } from 'react';
 import { Maximize, Minimize, X, CircleHelp, Waves } from 'lucide-react';
 import { SpatialAnalysis, type AnalysisKind } from './components/SpatialAnalysis';
@@ -81,6 +82,7 @@ export default function App({
   const [analysisPick, setAnalysisPick] = useState<{ lat: number; lon: number } | null>(null);
   const [cameraKey, setCameraKey] = useState(0);
   const [uploading, setUploading] = useState(false);
+  const [uploadNotice, setUploadNotice] = useState('');
   const [isFull, setIsFull] = useState(false);
   const [presentation, setPresentation] = useState(false);
   const [scene, setScene] = useState<'globe' | 'ocean'>('globe');
@@ -187,6 +189,13 @@ export default function App({
       bootstrapId.current++;
     };
   }, [bootstrap]);
+
+  useEffect(() => {
+    if (dataset?.variables.find((v) => v.id === variable)?.surface_only) {
+      if (depth !== 0) setDepth(0);
+      if (mode === 'volume' || mode === 'iso') setMode('slice');
+    }
+  }, [dataset, variable, depth, mode]);
 
   // ── Frame fetch ───────────────────────────────────────────────────────
   useEffect(() => {
@@ -337,7 +346,20 @@ export default function App({
       setAnalysis(null);
       setPlaying(false);
       setCompare(obs.synthetic);
-      if (scene !== 'ocean' || !region?.observations.some((o) => o.id === obs.id)) {
+      const inModelDomain =
+        dataset &&
+        obs.latitude >= dataset.bounds.latitude[0] &&
+        obs.latitude <= dataset.bounds.latitude[1] &&
+        (dataset.global ||
+          (obs.longitude >= dataset.bounds.longitude[0] &&
+            obs.longitude <= dataset.bounds.longitude[1]));
+      if (!inModelDomain) {
+        setScene('globe');
+        setAnchor(null);
+        setRegion(null);
+        setPreset('global');
+        setCameraKey((v) => v + 1);
+      } else if (scene !== 'ocean' || !region?.observations.some((o) => o.id === obs.id)) {
         setAnchor(obs);
         setRegion(null);
         setScene('ocean');
@@ -377,16 +399,22 @@ export default function App({
   }
 
   async function upload(file: File) {
+    setUploadNotice('');
     setUploading(true);
     setPlaying(false);
     try {
       const body = new FormData();
       body.append('file', file);
-      await request(
+      const loaded = await request<Dataset | { profiles: number; samples: number }>(
         /\.(csv|tsv|txt)$/i.test(file.name) ? '/api/observations/upload' : '/api/datasets/upload',
         { method: 'POST', body },
       );
       await bootstrap();
+      setUploadNotice(
+        'profiles' in loaded
+          ? `${file.name}: ${loaded.profiles} profiles loaded. Ocean fields are unchanged.`
+          : `${file.name}: ${loaded.name}, ${loaded.times.length} time frames. Fields now come from this file. Upload observation CSV separately, or restore the historical dataset.`,
+      );
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Unable to load this NetCDF file.');
     } finally {
@@ -396,6 +424,7 @@ export default function App({
   }
 
   async function loadRealArgo() {
+    setUploadNotice('');
     setPlaying(false);
     try {
       await request<Dataset>('/api/datasets/real-argo', { method: 'POST' });
@@ -404,24 +433,25 @@ export default function App({
       setError(e instanceof Error ? e.message : 'Unable to load real Argo.');
     }
   }
-  async function restore() {
-    try {
-      await request<Dataset>('/api/datasets/demo', { method: 'POST' });
-      await bootstrap();
-    } catch (e) {
-      setError(e instanceof Error ? e.message : 'Unable to restore demo.');
-    }
-  }
-
   function chooseVariable(v: Variable) {
     setShowField(true);
     setVariable(v);
+    if (dataset?.variables.find((m) => m.id === v)?.surface_only) {
+      setDepth(0);
+      setMode('slice');
+      setColorSettings({ scale: 'log' });
+    }
     setRange(
       dataset?.synthetic ? defaultRanges[v] : dataset!.variables.find((m) => m.id === v)!.range,
     );
     setThreshold(v === 'temperature' ? 20 : (defaultRanges[v][0] + defaultRanges[v][1]) / 2);
   }
   function chooseMode(m: Mode) {
+    if (
+      dataset?.variables.find((v) => v.id === variable)?.surface_only &&
+      (m === 'iso' || m === 'volume')
+    )
+      return;
     if (m === 'iso' && scene === 'globe' && dataset) {
       const center = observations[0] ?? {
         id: 'analysis-region',
@@ -634,8 +664,8 @@ export default function App({
             <i className={busy || regionBusy ? 'loading' : ''} />
             {busy || regionBusy ? 'Updating' : 'System Ready'}
           </span>
-          <span className="demo-badge">
-            {dataset.synthetic ? 'SYNTHETIC MODEL' : 'LOCAL MODEL'}
+          <span className="data-badge">
+            {dataset.synthetic ? 'UPLOADED TEST DATA' : 'HISTORICAL OCEAN DATA'}
           </span>
           <button
             className="icon-button"
@@ -747,6 +777,7 @@ export default function App({
         <OceanIntro
           ready={!!baseName}
           synthetic={dataset.synthetic}
+          measuredCount={observations.filter((o) => !o.synthetic).length}
           onEnter={() => {
             onEnter?.();
             window.requestAnimationFrame(() =>
@@ -807,7 +838,6 @@ export default function App({
           threshold={threshold}
           onThreshold={setThreshold}
           onUpload={() => fileInput.current?.click()}
-          onDemo={() => void restore()}
           onRealArgo={() => void loadRealArgo()}
           uploading={uploading}
           onTransect={() => openAnalysis('transect')}
@@ -931,7 +961,7 @@ export default function App({
         type="file"
         accept=".nc,.csv,.tsv,.txt"
         hidden
-        aria-label="Upload NetCDF"
+        aria-label="Upload NetCDF or observation CSV"
         onChange={(e) => {
           const f = e.target.files?.[0];
           if (f) void upload(f);
@@ -961,13 +991,21 @@ export default function App({
           </button>
         </div>
       )}
+      {uploadNotice && !error && (
+        <div className="upload-notice" role="status">
+          <span>{uploadNotice}</span>
+          <button aria-label="Dismiss upload status" onClick={() => setUploadNotice('')}>
+            <X size={14} />
+          </button>
+        </div>
+      )}
 
       {/* ── Tour caption ─────────────────────────────────────────────── */}
       {tour >= 0 && (
         <div className="tour-caption">
           <span>GUIDED EXPLORATION {tour + 1} / 5</span>
           <strong>{tourLabels[tour]}</strong>
-          <button aria-label="Stop demo tour" onClick={() => setTour(-1)}>
+          <button aria-label="Stop guided tour" onClick={() => setTour(-1)}>
             <X size={15} />
           </button>
         </div>
@@ -986,7 +1024,11 @@ export default function App({
         onPlay={() => setPlaying((v) => !v)}
         onTour={() => setTour((v) => (v >= 0 ? -1 : 0))}
         tourActive={tour >= 0}
-        hasSynthetic={dataset.synthetic}
+        hasTour={
+          dataset.has_currents &&
+          dataset.bounds.depth[1] >= 500 &&
+          dataset.variables.some((v) => v.id === 'temperature')
+        }
       />
 
       {/* ── Help modal ────────────────────────────────────────────────── */}
@@ -1034,7 +1076,8 @@ export default function App({
             </dl>
             <p className="method-note">
               Depth is schematically exaggerated for visibility. Currents follow model u/v vectors.
-              The demo model and all instrument profiles are synthetic.
+              Model fields and instrument observations have separate sources. Check the model label
+              and each profile’s provenance before interpreting comparisons.
             </p>
             <button className="primary-button" onClick={() => setHelp(false)}>
               Return to ocean

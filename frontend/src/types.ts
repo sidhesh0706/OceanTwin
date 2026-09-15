@@ -17,12 +17,16 @@ export type CameraPreset =
   | 'southern'
   | 'arctic';
 export interface VariableMeta {
+  source_name?: string;
+  surface_only?: boolean;
+  sampling_note?: string;
   id: Variable;
   name: string;
   units: string;
   range: [number, number];
 }
 export interface Dataset {
+  source?: string;
   id: string;
   name: string;
   synthetic: boolean;
@@ -70,6 +74,7 @@ export interface Observation {
   source_url?: string | null;
   retrieved_date?: string | null;
   available_variables?: Variable[] | null;
+  ocean_basin?: string | null;
 }
 export interface Comparison {
   instrument_id: string;

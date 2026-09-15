@@ -11,7 +11,7 @@ interface Props {
   onPlay: () => void;
   onTour: () => void;
   tourActive: boolean;
-  hasSynthetic: boolean;
+  hasTour: boolean;
 }
 
 export function BottomTimeline({
@@ -23,7 +23,7 @@ export function BottomTimeline({
   onPlay,
   onTour,
   tourActive,
-  hasSynthetic,
+  hasTour,
 }: Props) {
   // Pick 4 evenly-spaced label indices
   const n = dataset.times.length;
@@ -88,14 +88,14 @@ export function BottomTimeline({
         <span className="btl-frame">
           Frame {String(time + 1).padStart(2, '0')} / {n}
         </span>
-        {hasSynthetic && (
+        {hasTour && (
           <button
             className={`btl-tour ${tourActive ? 'active' : ''}`}
             onClick={onTour}
-            aria-label={tourActive ? 'Stop demo tour' : 'Start demo tour'}
+            aria-label={tourActive ? 'Stop guided tour' : 'Start guided tour'}
           >
             {tourActive ? <Pause size={13} /> : <Play size={13} />}
-            <span>{tourActive ? 'Stop Tour' : 'Demo Tour'}</span>
+            <span>{tourActive ? 'Stop Tour' : 'Guided Tour'}</span>
           </button>
         )}
       </div>

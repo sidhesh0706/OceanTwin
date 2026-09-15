@@ -1,6 +1,6 @@
 """Reproducible, explicitly synthetic GLOBAL ocean model and sensor profiles.
 
-Run from the repository root: python -m backend.scripts.generate_demo_data
+Run from the repository root: python -m backend.scripts.generate_synthetic_test_data
 No network access is needed. Natural Earth geometry is bundled.
 """
 
@@ -170,8 +170,8 @@ def generate():
             "longitude": longitude,
         },
         attrs={
-            "title": "OceanTwin Global Demo Model",
-            "dataset_id": "OT-DEMO-GLOBAL-001",
+            "title": "OceanTwin Global Presentation Model",
+            "dataset_id": "OT-PRESENTATION-GLOBAL-001",
             "synthetic": "true",
             "description": "Analytic global demonstration fields across all ocean basins; NOT a forecast or measured ocean state.",
             "Conventions": "CF-1.8",
@@ -181,7 +181,7 @@ def generate():
     ds.latitude.attrs = {"units": "degrees_north", "standard_name": "latitude", "axis": "Y"}
     ds.longitude.attrs = {"units": "degrees_east", "standard_name": "longitude", "axis": "X"}
     ds.to_netcdf(
-        DATA / "demo_ocean.nc",
+        DATA / "synthetic_test_ocean.nc",
         engine="netcdf4",
         encoding={v: {"zlib": True, "complevel": 4} for v in arrays},
     )
@@ -281,7 +281,7 @@ def generate():
         json.dumps(sources, indent=2, allow_nan=False), encoding="utf-8"
     )
     print(
-        f"Generated global demo: {dict(ds.sizes)}, "
+        f"Generated global presentation: {dict(ds.sizes)}, "
         f"{len(sources)} instruments across all ocean basins -> {DATA}"
     )
 

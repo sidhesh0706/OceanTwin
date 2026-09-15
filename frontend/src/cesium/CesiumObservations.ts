@@ -7,6 +7,7 @@ export interface LandingObservation {
   longitude: number;
   max_depth: number;
   timestamp: string;
+  synthetic?: boolean;
 }
 
 const MARKER_COLORS: Record<string, string> = {

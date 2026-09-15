@@ -39,14 +39,20 @@ class OceanService:
             raise ValueError("This instrument has no current-speed profile.")
         arr = ds[variable].isel(time=time_index)
         # Linear horizontal + vertical collocation. No extrapolation or filling across land.
-        longitude = self.adapter.position(obs["latitude"], obs["longitude"])
-        column = self.adapter.periodic(arr).interp(latitude=obs["latitude"], longitude=longitude)
+        in_domain = (float(ds.latitude.min()) <= obs["latitude"] <= float(ds.latitude.max()) and
+                     (self.adapter.is_global or float(ds.longitude.min()) <= obs["longitude"] <= float(ds.longitude.max())))
+        column = None
+        if in_domain:
+            longitude = self.adapter.position(obs["latitude"], obs["longitude"])
+            column = self.adapter.periodic(arr).interp(latitude=obs["latitude"], longitude=longitude)
         rows = []
         errors = []
         for p in obs["profiles"]:
             observed = p.get(variable)
             z = p["depth"]
-            if z in column.depth:
+            if column is None:
+                model = float("nan")
+            elif z in column.depth:
                 model = float(column.sel(depth=z))
             elif ds.sizes["depth"] > 1:
                 model = float(column.interp(depth=z))
@@ -73,7 +79,8 @@ class OceanService:
                 self.adapter.variables.index(variable)
             ]["units"],
             "profiles": rows,
-            "method": "Linear latitude/longitude/depth interpolation; selected model timestep. Bias = model − observed.",
+            "method": ("Linear latitude/longitude/depth interpolation; selected model timestep. Bias = model − observed."
+                       if in_domain else "Observation profile only; this location is outside the active model domain."),
             "model_time": self.adapter.times()[time_index],
             "observation_time": obs["timestamp"],
             "time_offset_hours": delta,
