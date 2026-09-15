@@ -667,7 +667,11 @@ export default function App({
             {busy || regionBusy ? 'Updating' : 'System Ready'}
           </span>
           <span className="data-badge">
-            {dataset.synthetic ? 'UPLOADED TEST DATA' : 'HISTORICAL OCEAN DATA'}
+            {observations.some((o) => o.model_station)
+              ? 'UPLOADED NETCDF DATA'
+              : dataset.synthetic
+                ? 'UPLOADED TEST DATA'
+                : 'HISTORICAL OCEAN DATA'}
           </span>
           <button
             className="icon-button"
@@ -779,7 +783,8 @@ export default function App({
         <OceanIntro
           ready={!!baseName}
           synthetic={dataset.synthetic}
-          measuredCount={observations.filter((o) => !o.synthetic).length}
+          measuredCount={observations.filter((o) => !o.synthetic && !o.model_station).length}
+          stationCount={observations.filter((o) => o.model_station).length}
           onEnter={() => {
             onEnter?.();
             window.requestAnimationFrame(() =>

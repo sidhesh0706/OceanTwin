@@ -4,11 +4,13 @@ export default function OceanIntro({
   ready,
   synthetic,
   measuredCount,
+  stationCount,
   onEnter,
 }: {
   ready: boolean;
   synthetic: boolean;
   measuredCount: number;
+  stationCount: number;
   onEnter: () => void;
 }) {
   return (
@@ -51,7 +53,11 @@ export default function OceanIntro({
         </div>
       </div>
       <footer className="intro-footer">
-        <span>{measuredCount} MEASURED PROFILES</span>
+        <span>
+          {stationCount > 0
+            ? `${stationCount} NETCDF STATIONS`
+            : `${measuredCount} MEASURED PROFILES`}
+        </span>
         <span>{synthetic ? 'SYNTHETIC MODEL' : 'LOCAL MODEL DATA'}</span>
         <span>NASA Earth imagery · Scientific model overlays</span>
       </footer>
