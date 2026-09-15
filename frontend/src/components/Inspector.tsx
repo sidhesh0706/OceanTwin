@@ -220,7 +220,9 @@ export function Inspector({
           {loading ? (
             <div className="chart-message">
               <span className="spinner" />
-              Collocating model profile…
+              {selected.model_station
+                ? 'Sampling uploaded water column…'
+                : 'Collocating model profile…'}
             </div>
           ) : error ? (
             <div className="chart-message error-text">{error}</div>
@@ -276,34 +278,36 @@ export function Inspector({
                       labelFormatter={(v) => `${v} m`}
                       formatter={(v) => (typeof v === 'number' ? v.toFixed(3) : 'No sample')}
                     />
-                    {compare && (
+                    {(compare || selected.model_station) && (
                       <Line
-                        name="Model"
+                        name={selected.model_station ? 'Uploaded field' : 'Model'}
                         dataKey="model"
                         stroke="#4ea4ff"
                         strokeWidth={2}
-                        strokeDasharray="5 3"
+                        strokeDasharray={selected.model_station ? undefined : '5 3'}
                         dot={false}
                         connectNulls={false}
                         isAnimationActive={false}
                       />
                     )}
-                    <Line
-                      name="Observed"
-                      dataKey="observed"
-                      stroke="#8be7cd"
-                      strokeWidth={2}
-                      dot={{ r: 2, strokeWidth: 0, fill: '#8be7cd' }}
-                      connectNulls={false}
-                      isAnimationActive={false}
-                    />
+                    {!selected.model_station && (
+                      <Line
+                        name="Observed"
+                        dataKey="observed"
+                        stroke="#8be7cd"
+                        strokeWidth={2}
+                        dot={{ r: 2, strokeWidth: 0, fill: '#8be7cd' }}
+                        connectNulls={false}
+                        isAnimationActive={false}
+                      />
+                    )}
                   </ComposedChart>
                 </ResponsiveContainer>
               </div>
               <div className="chart-legend">
                 <span>
-                  <i />
-                  Observed
+                  <i className={selected.model_station ? 'model' : undefined} />
+                  {selected.model_station ? 'Uploaded field' : 'Observed'}
                 </span>
                 {compare && (
                   <span>
