@@ -60,6 +60,7 @@ export default function GlobeExplorer(props: Props) {
   const viewerRef = useRef<CesiumViewer | null>(null);
   const layers = useRef<{
     oceanImagery: unknown;
+    oceanBackdrop: unknown;
     slice: unknown;
     outline: unknown;
     volumeSlices: unknown[];
@@ -75,6 +76,7 @@ export default function GlobeExplorer(props: Props) {
     guides: string[];
   }>({
     oceanImagery: null,
+    oceanBackdrop: null,
     slice: null,
     outline: null,
     volumeSlices: [],
@@ -414,6 +416,11 @@ export default function GlobeExplorer(props: Props) {
           /* Best-effort. */
         }
         try {
+          if (L.oceanBackdrop) v.imageryLayers.remove(L.oceanBackdrop, true);
+        } catch {
+          /* Best-effort. */
+        }
+        try {
           if (L.obs) v.dataSources.remove(L.obs);
         } catch {
           /* Best-effort. */
@@ -425,6 +432,7 @@ export default function GlobeExplorer(props: Props) {
         }
       }
       L.oceanImagery = null;
+      L.oceanBackdrop = null;
       L.slice = null;
       L.outline = null;
       L.volumeSlices = [];
@@ -493,6 +501,14 @@ export default function GlobeExplorer(props: Props) {
       }
       L.oceanImagery = null;
     }
+    if (L.oceanBackdrop) {
+      try {
+        v?.imageryLayers.remove(L.oceanBackdrop, true);
+      } catch {
+        /* Best-effort. */
+      }
+      L.oceanBackdrop = null;
+    }
     if (
       !v ||
       !Cesium ||
@@ -515,6 +531,37 @@ export default function GlobeExplorer(props: Props) {
       canvas.width = W;
       canvas.height = H;
       const [min, max] = range;
+
+      // A restrained global ocean tint gives regional products visual continuity.
+      // It is land-masked context only; the stronger scientific colors below stay
+      // inside the uploaded or bundled file's verified geographic coverage.
+      if (!isGlobal) {
+        const backdrop = document.createElement('canvas');
+        backdrop.width = 1024;
+        backdrop.height = 512;
+        paintGlobalOcean(
+          backdrop,
+          [
+            [null, null],
+            [null, null],
+          ],
+          [-90, 90],
+          [-180, 180],
+          {
+            land: coastline,
+            variable,
+            min,
+            max,
+            opacity: Math.min(0.34, Math.max(0.18, opacity * 0.32)),
+            oceanBackground: true,
+          },
+        );
+        const backdropProvider = new Cesium.SingleTileImageryProvider({
+          url: backdrop.toDataURL('image/png'),
+          rectangle: Cesium.Rectangle.fromDegrees(-180, -90, 180, 90),
+        });
+        L.oceanBackdrop = v.imageryLayers.addImageryProvider(backdropProvider);
+      }
 
       if (isGlobal) {
         paintGlobalOcean(canvas, rows, slice.latitudes, slice.longitudes, {

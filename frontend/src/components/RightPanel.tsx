@@ -269,8 +269,8 @@ export function RightPanel({
         </dl>
         {baseName && <p className="rp-attr">{baseName}</p>}
         <p className="rp-attr">
-          Coastline-smoothed display · analysis uses the original grid. Dark ocean areas have no
-          model value.
+          Global blue ocean is visual context · colored scientific values mark the active dataset
+          coverage. Analysis uses the original grid.
         </p>
       </section>
     </aside>
