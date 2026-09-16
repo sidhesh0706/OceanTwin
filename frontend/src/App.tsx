@@ -14,6 +14,7 @@ import type {
 } from './types';
 import { api, request, validateDataset, validateField } from './services/api';
 import { defaultExaggeration } from './ocean/frameFit';
+import { isInDomain } from './cesium/GeographicCoordinates';
 import GlobeExplorer from './explorer/GlobeExplorer';
 import { Inspector } from './components/Inspector';
 import { ToolRail } from './components/ToolRail';
@@ -375,6 +376,13 @@ export default function App({
   async function inspect(lat: number, lon: number) {
     if (intro) return;
     if (!activeFrame) return;
+    // The whole-globe ocean tint is geographic context. Only send scientific
+    // inspection requests for coordinates covered by the active dataset.
+    if (!dataset || !isInDomain(lon, lat, dataset)) {
+      setError('');
+      setInspection(null);
+      return;
+    }
     if (analysis) {
       setAnalysisPick({ lat, lon });
       return;
