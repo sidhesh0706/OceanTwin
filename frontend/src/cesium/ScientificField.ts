@@ -45,12 +45,22 @@ function paint(
   for (let y = 0; y < h; y++)
     for (let x = 0; x < w; x++) {
       const offset = (y * w + x) * 4,
-        wet = 1 - mask[offset + 3] / 255;
+        wet = 1 - mask[offset + 3] / 255,
+        edgeFade =
+          opts.fadeEdge && !global
+            ? Math.min(
+                1,
+                x / Math.max(1, w * 0.08),
+                (w - 1 - x) / Math.max(1, w * 0.08),
+                y / Math.max(1, h * 0.1),
+                (h - 1 - y) / Math.max(1, h * 0.1),
+              )
+            : 1;
       if (!wet) continue;
       const value = interpolate(display, xs[x], ys[y]);
       if (value === null) {
         if (opts.oceanBackground) {
-          img.data.set([13, 42, 60, Math.round(255 * wet * opts.opacity)], offset);
+          img.data.set([13, 42, 60, Math.round(255 * wet * edgeFade * opts.opacity)], offset);
         }
         continue;
       }
@@ -65,7 +75,7 @@ function paint(
           Math.round(color.r * 255),
           Math.round(color.g * 255),
           Math.round(color.b * 255),
-          Math.round(opts.opacity * wet * 255),
+          Math.round(opts.opacity * wet * edgeFade * 255),
         ],
         offset,
       );
