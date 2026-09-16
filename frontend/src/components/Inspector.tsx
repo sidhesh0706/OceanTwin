@@ -11,6 +11,7 @@ import {
 } from 'recharts';
 import type { Comparison, Dataset, Field, Inspection, Observation, Variable } from '../types';
 import { api, coordinate, stamp } from '../services/api';
+import { observationLocation } from '../ocean/locationContext';
 
 interface Props {
   dataset: Dataset;
@@ -50,6 +51,7 @@ export function Inspector({
         (selected.longitude >= dataset.bounds.longitude[0] &&
           selected.longitude <= dataset.bounds.longitude[1]))
     : true;
+  const location = selected ? observationLocation(selected) : null;
   useEffect(() => {
     if (!profileVariables.some((v) => v.id === profileVariable) && profileVariables.length)
       setProfileVariable(profileVariables[0].id);
@@ -134,6 +136,18 @@ export function Inspector({
             {coordinate(selected.latitude, true)} <span>/</span> {coordinate(selected.longitude)}
           </p>
           <dl className="details">
+            {location && (
+              <div>
+                <dt>Ocean region</dt>
+                <dd>{location.sea ? `${location.sea} · ${location.ocean}` : location.ocean}</dd>
+              </div>
+            )}
+            {location?.country && (
+              <div>
+                <dt>Country context</dt>
+                <dd>{location.country}</dd>
+              </div>
+            )}
             <div>
               <dt>Profile recorded</dt>
               <dd>{stamp(selected.timestamp)}</dd>
