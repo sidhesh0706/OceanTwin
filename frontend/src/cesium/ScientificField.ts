@@ -60,7 +60,7 @@ function paint(
       const value = interpolate(display, xs[x], ys[y]);
       if (value === null) {
         if (opts.oceanBackground) {
-          img.data.set([13, 42, 60, Math.round(255 * wet * edgeFade * opts.opacity)], offset);
+          img.data.set([5, 78, 104, Math.round(255 * wet * edgeFade * opts.opacity)], offset);
         }
         continue;
       }

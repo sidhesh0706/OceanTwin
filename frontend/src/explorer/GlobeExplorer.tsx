@@ -104,6 +104,7 @@ export default function GlobeExplorer(props: Props) {
   // Domain outline: shown only for regional datasets at mid-zoom.
   // Global datasets never show a domain outline (the whole ocean is the domain).
   const showOutline = !isGlobalScale && camHeight < GLOBAL_KM && camHeight >= REGIONAL_KM;
+  const showRegionalField = isGlobalScale || camHeight < REGIONAL_KM;
 
   // Viewer lifecycle: created once, never recreated for data changes.
   useEffect(() => {
@@ -552,7 +553,7 @@ export default function GlobeExplorer(props: Props) {
             variable,
             min,
             max,
-            opacity: Math.min(0.34, Math.max(0.18, opacity * 0.32)),
+            opacity: Math.min(0.58, Math.max(0.42, opacity * 0.62)),
             oceanBackground: true,
           },
         );
@@ -562,6 +563,11 @@ export default function GlobeExplorer(props: Props) {
         });
         L.oceanBackdrop = v.imageryLayers.addImageryProvider(backdropProvider);
       }
+
+      // At whole-Earth scale, a cohesive ocean reads better than a regional
+      // rectangle. Scientific values fade in as the camera approaches their
+      // verified domain, where the spatial detail can be interpreted honestly.
+      if (!showRegionalField) return;
 
       if (isGlobal) {
         paintGlobalOcean(canvas, rows, slice.latitudes, slice.longitudes, {
@@ -614,6 +620,7 @@ export default function GlobeExplorer(props: Props) {
     coastline,
     globeReady,
     props.showField,
+    showRegionalField,
   ]);
 
   // ── Domain outline (Regional datasets only, never global) ──────────────
