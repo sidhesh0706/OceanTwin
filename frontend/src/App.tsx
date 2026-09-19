@@ -211,13 +211,17 @@ export default function App({
       try {
         const volumeKey = `${revision}-${variable}-${time}`;
         const volumeReady = frameRef.current && volumeKeyRef.current === volumeKey;
+        const surfaceOnly = dataset.variables.find((v) => v.id === variable)?.surface_only;
+        const sliceRequest = api.field(variable, time, depth, controller.signal);
         const [slice, volume, current] = await Promise.all([
-          api.field(variable, time, depth, controller.signal),
-          volumeReady
-            ? Promise.resolve(frameRef.current!.volume)
-            : volumeCache.current.has(volumeKey)
-              ? Promise.resolve(volumeCache.current.get(volumeKey)!)
-              : api.field(variable, time, null, controller.signal),
+          sliceRequest,
+          surfaceOnly
+            ? sliceRequest
+            : volumeReady
+              ? Promise.resolve(frameRef.current!.volume)
+              : volumeCache.current.has(volumeKey)
+                ? Promise.resolve(volumeCache.current.get(volumeKey)!)
+                : api.field(variable, time, null, controller.signal),
           dataset.has_currents
             ? api.currents(time, depth, controller.signal)
             : Promise.resolve(null),

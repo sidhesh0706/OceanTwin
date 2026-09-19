@@ -209,7 +209,13 @@ export function RightPanel({
             {observations
               .filter((o) => (o.instrument_type === 'ARGO' ? argo : gliders))
               .map((o) => (
-                <button key={o.id} onClick={() => onSelect(o)}>
+                <button
+                  key={o.id}
+                  onClick={() => {
+                    setObsOpen(false);
+                    onSelect(o);
+                  }}
+                >
                   {o.id}
                   <small>
                     {o.model_station ? 'NetCDF station' : o.instrument_type} ·{' '}

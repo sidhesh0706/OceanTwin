@@ -1,12 +1,12 @@
-# OceanTwin3D
+# OceanTwin
 
-OceanTwin3D is an interactive 4D ocean data exploration prototype for SIH26067. It connects location, depth, time, model fields, and instrument profiles in one scientific workspace.
+OceanTwin is an interactive 4D ocean data exploration prototype for SIH26067. It connects location, depth, time, model fields, and instrument profiles in one scientific workspace.
 
 The application starts on a Cesium Earth globe. Selecting an observation opens a regional Three.js ocean view with depth slices, currents, profiles, transects, and region statistics. A FastAPI backend reads NetCDF data through xarray and NumPy and serves the built React application.
 
 > **Data:** The default workspace uses historical HYCOM temperature, salinity and currents, NASA MODIS surface chlorophyll, and 54 measured Argo profiles. It is an offline historical analysis, not a live feed. See [real ocean data and upload sample](docs/REAL_OCEAN.md) and [Argo provenance](docs/REAL_ARGO.md).
 
-Shared repository: https://github.com/sidhesh0706/OceanTwin3D
+Shared repository: https://github.com/sidhesh0706/OceanTwin
 
 Teammate contributions integrated from https://github.com/manaour2006/OceanTwin3D (commit `1d129c0`).
 
@@ -227,4 +227,4 @@ setup_project.py          Reproducible local setup script
 
 ## Scope and future work
 
-This repository demonstrates a complete local exploration workflow. Production use would require validated operational datasets, data-quality controls, authentication, deployment, real-time ingestion, forecast provenance, performance testing, and domain review. Those capabilities are not claimed by the bundled synthetic presentation.
+This repository demonstrates a complete local exploration workflow. Production use would require validated operational datasets, data-quality controls, authentication, deployment, real-time ingestion, forecast provenance, performance testing, and domain review. Those capabilities are not claimed by the bundled historical presentation dataset.

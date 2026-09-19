@@ -87,6 +87,9 @@ export function ToolRail(p: Props) {
   }, [p.range[0], colors.scale]);
   const [open, setOpen] = useState<Panel>(null);
   const toggle = (panel: Panel) => setOpen((v) => (v === panel ? null : panel));
+  // A globe-to-ocean transition changes the entire interaction context.
+  // Close any floating drawer so the regional scene and profile arrive cleanly.
+  useEffect(() => setOpen(null), [p.local]);
 
   return (
     <>

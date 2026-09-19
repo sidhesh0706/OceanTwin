@@ -1,10 +1,12 @@
-# Validation — 15 September 2026
+# Validation — 19 September 2026
 
 ## Automated checks
 
 - Backend: **38 tests passed** on Windows / Python 3.13.
 - Frontend: **7 tests passed**.
 - TypeScript and Vite production build: passed.
+- Browser workflow audit: intro, primary tool panels, chlorophyll, currents, observation selection, regional transition, and profile comparison passed without console errors.
+- Floating tool and observation drawers close automatically when a float opens the regional ocean, keeping the transition and inspector unobstructed.
 - Real-data regression tests match prepared temperature, salinity, and current fields to the downloaded HYCOM source arrays.
 - Chlorophyll tests verify that the MODIS monthly composite is surface-only, retains missing pixels, and is not fabricated below the surface.
 - Argo tests verify all **54 profiles and 37,357 retained measurements** against the three downloaded official GDAC files.

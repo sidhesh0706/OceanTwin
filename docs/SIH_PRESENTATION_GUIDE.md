@@ -1,8 +1,8 @@
-# OceanTwin3D — SIH presentation guide
+# OceanTwin — SIH presentation guide
 
 ## What to claim
 
-OceanTwin3D is a working local prototype that combines a global Earth view, historical ocean-model fields, satellite chlorophyll, measured Argo profiles, NetCDF ingestion, and scientific analysis in one 4D workspace. The bundled data are traceable historical snapshots rather than a live operational feed.
+OceanTwin is a working local prototype that combines a global Earth view, historical ocean-model fields, satellite chlorophyll, measured Argo profiles, NetCDF ingestion, and scientific analysis in one 4D workspace. The bundled data are traceable historical snapshots rather than a live operational feed.
 
 ## Evidence in the prototype
 

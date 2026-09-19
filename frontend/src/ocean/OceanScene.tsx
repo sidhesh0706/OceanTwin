@@ -382,7 +382,7 @@ function CameraRig({
     const key = `rev=8 preset=${preset} elev=${a.elevationDeg.toFixed(1)} az=${a.azimuthDeg.toFixed(1)}`;
     if (logged.current !== key) {
       logged.current = key;
-      console.info(`[OceanTwin 3D] ${key}`);
+      console.info(`[OceanTwin] ${key}`);
     }
   }, [preset, position]);
   useFrame((_, dt) => {
