@@ -19,7 +19,7 @@ export default function OceanIntro({
         <span className="intro-wordmark">
           OCEAN<span>TWIN</span>
         </span>
-        <span className="intro-edition">4D OCEAN EXPLORATION</span>
+        <span className="intro-edition">OCEAN DATA INTELLIGENCE</span>
       </header>
       <div className="intro-copy">
         <p className="intro-eyebrow">ONE EARTH. MANY DEPTHS.</p>

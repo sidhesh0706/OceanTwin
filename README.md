@@ -1,6 +1,6 @@
 # OceanTwin
 
-OceanTwin is an interactive 4D ocean data exploration prototype for SIH26067. It connects location, depth, time, model fields, and instrument profiles in one scientific workspace.
+OceanTwin is an interactive ocean data intelligence prototype for SIH26067. It connects location, depth, time, model fields, and instrument profiles in one scientific workspace.
 
 The application starts on a Cesium Earth globe. Selecting an observation opens a regional Three.js ocean view with depth slices, currents, profiles, transects, and region statistics. A FastAPI backend reads NetCDF data through xarray and NumPy and serves the built React application.
 
@@ -21,12 +21,12 @@ Teammate contributions integrated from https://github.com/manaour2006/OceanTwin3
 
 ### Regional ocean view
 
-- Top-down and angled 3D views around a selected observation.
+- Top-down and angled spatial views around a selected observation.
 - Temperature, salinity, chlorophyll, and derived current speed.
 - Continuous depth selection interpolated between source levels.
 - Time playback, frame navigation, timeline scrubbing, and loading-state preservation.
 - Current vectors, streamlines, and illustrative animated particles.
-- Depth-colored sections and a sampled 3D volume view.
+- Depth-colored sections and a sampled volume view.
 - Responsive camera fitting for the available viewport.
 
 ### Observations and analysis

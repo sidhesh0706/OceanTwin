@@ -34,13 +34,13 @@ Target length: **6 minutes 30 seconds**. Record at 1920 × 1080, browser zoom 10
 
 > This float lies in the Arabian Sea, within the Indian Ocean model domain. OceanTwin now opens a local flat and angled ocean view around the instrument. The profile is measured data, not a generated curve. We can compare its temperature or salinity with the historical model at the float coordinates and nearest model time. RMSE, MAE, bias, matched samples, and time offset are calculated from the returned profiles.
 
-## 2:05–2:55 — Depth, 3D structure, and time
+## 2:05–2:55 — Depth, volume, and time
 
-**Record:** Close the inspector if it obscures the field. Click **Depth**, select **200 m**, then **500 m**. Click **Layers → 3D Volume**. Use **Top-down**, then **3D ocean**. Click the next time-frame button twice, slowly enough for each update to finish.
+**Record:** Close the inspector if it obscures the field. Click **Depth**, select **200 m**, then **500 m**. Click **Layers → Volume View**. Use **Top-down**, then **Angled view**. Click the next time-frame button twice, slowly enough for each update to finish.
 
 **Narration:**
 
-> The model contains 36 source depth levels down to two thousand metres. We can inspect a continuous display depth, switch between a surface-style slice and sampled 3D volume, and change camera perspective. The timeline moves through three historical HYCOM analysis frames from 11 to 13 February 2026. Every change requests the active variable, depth, and time from the backend; it is not a pre-rendered animation.
+> The model contains 36 source depth levels down to two thousand metres. We can inspect a continuous display depth, switch between a surface-style slice and a sampled volume, and change camera perspective. The timeline moves through three historical HYCOM analysis frames from 11 to 13 February 2026. Every change requests the active variable, depth, and time from the backend; it is not a pre-rendered animation.
 
 ## 2:55–3:35 — Currents and chlorophyll provenance
 

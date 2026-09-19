@@ -1,4 +1,4 @@
-// Small pure helpers for the local 3D ocean analysis view.
+// Small pure helpers for the local ocean analysis view.
 // No THREE dependency.
 
 export type Vec3 = [number, number, number];

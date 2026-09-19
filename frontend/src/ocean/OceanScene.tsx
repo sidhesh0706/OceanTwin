@@ -6,7 +6,7 @@ import * as THREE from 'three';
 import type { CameraPreset, Dataset, Frame, Land, Mode, Observation, Variable } from '../types';
 import { projection, depthY } from './coordinates';
 import { viewAngles } from './frameFit';
-// Console marker proving which 3D framing code a session runs (rev 8:
+// Console marker proving which spatial framing code a session runs (rev 8:
 // near-frontal oblique + gated focus + screen-space depth rail).
 import { Slice, Volume, SectionCurtain } from './Fields';
 import { CurrentParticles } from './CurrentParticles';
@@ -309,7 +309,7 @@ function CameraRig({
   dataset: Dataset;
   exaggeration: number;
   /**
-   * Selected-observation anchor in world x/z. 3D ONLY: the framing target
+   * Selected-observation anchor in world x/z. ANGLED VIEW ONLY: the framing target
    * leans toward it. Top-down keeps the region center (original behavior).
    */
   focus: { x: number; z: number } | null;
@@ -322,7 +322,7 @@ function CameraRig({
   const bottom = depthY(dataset.bounds.depth[1], exaggeration);
   const target = useMemo(() => {
     const t = new THREE.Vector3(0, preset === 'surface' ? 0 : bottom / 2, 0);
-    // 3D ONLY: lean the target toward the selected observation so it sits
+    // ANGLED VIEW ONLY: lean the target toward the selected observation so it sits
     // near the visual center. The fit corners are evaluated relative to the
     // target, so containment is preserved. Top-down keeps region center.
     if (preset !== 'surface' && focus) {
@@ -334,7 +334,7 @@ function CameraRig({
   const footprint = projection(dataset);
   const position = useMemo(() => {
     const p = footprint;
-    // Near-frontal oblique for 3D (~20° down, ~5° azimuth): north stays up,
+    // Near-frontal oblique (~20° down, ~5° azimuth): north stays up,
     // the diagonal-card effect is gone. Dives stay near-horizontal, the
     // surface map stays top-down. This direction is the ONLY framing change
     // versus the original renderer; the fit math below is untouched.
@@ -400,7 +400,7 @@ function CameraRig({
       dampingFactor={0.08}
       minDistance={7}
       maxDistance={100}
-      // 3D never flops fully top-down (labels would stack) nor far under
+      // The angled view never flops fully top-down (labels would stack) nor far under
       // the plane; the surface map keeps full orbit freedom.
       minPolarAngle={preset === 'surface' ? 0 : 0.85}
       maxPolarAngle={preset === 'surface' ? Math.PI * 0.52 : Math.PI * 0.86}
@@ -590,7 +590,7 @@ function World(props: SceneProps) {
     threshold,
   } = props;
   const p = projection(dataset);
-  // Selected-observation anchor for 3D framing + the screen-space rail.
+  // Selected-observation anchor for angled framing + the screen-space rail.
   const selectedObs = observations.find((o) => o.id === selected) ?? null;
   const focus = selectedObs
     ? { x: p.x(selectedObs.longitude), z: p.z(selectedObs.latitude) }
@@ -621,7 +621,7 @@ function World(props: SceneProps) {
         topDown={preset === 'surface'}
       />
       <Geography land={land} dataset={dataset} />
-      {/* 3D-only faint curtains: the surface preset shows none. */}
+      {/* Angled-view-only faint curtains: the surface preset shows none. */}
       {mode !== 'iso' &&
         preset !== 'surface' &&
         (['south', 'east'] as const).map((edge) => (

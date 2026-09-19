@@ -129,11 +129,11 @@ export function RightPanel({
           <button
             className={mode === 'volume' ? 'active' : ''}
             onClick={() => onMode('volume')}
-            aria-label="3D volume mode"
+            aria-label="Volume view mode"
             disabled={meta.surface_only}
           >
             <Box size={13} />
-            <span>3D Volume</span>
+            <span>Volume</span>
           </button>
           <button
             className={mode === 'currents' ? 'active' : ''}
@@ -235,7 +235,7 @@ export function RightPanel({
           <span>
             {dataset.synthetic
               ? dataset.global
-                ? 'Global Ocean Model · 3D Digital Twin'
+                ? 'Global Ocean Model · Digital Twin'
                 : 'Ocean Model · Regional Domain'
               : dataset.name}
           </span>

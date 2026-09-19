@@ -3339,7 +3339,7 @@ input[type='number'] {
 .app.local-ocean > .fp .fp-body {
   max-height: calc(100dvh - var(--top) - var(--bottom) - 206px);
 }
-/* Screen-space depth rail (local 3D analysis): compact annotation column
+/* Screen-space depth rail (local spatial analysis): compact annotation column
    projected from the depth axis every frame. Positioned entirely in screen
    pixels by the renderer — rows can never overlap or leave the viewport. */
 .depth-rail {

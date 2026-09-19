@@ -27,7 +27,7 @@ function applyToken(token: string | null) {
   }
 }
 
-// Primary cinematic Earth layer: Google Photorealistic 3D Tiles. When it
+// Primary cinematic Earth layer: Google photorealistic tiles. When it
 // loads, the plain globe beneath is hidden to avoid a duplicate Earth.
 export async function applyCinematicBase(
   viewer: CesiumViewer,

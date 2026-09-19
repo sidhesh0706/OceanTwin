@@ -197,7 +197,7 @@ export function ToolRail(p: Props) {
             {(
               [
                 { id: 'slice', label: 'Depth Slice', Icon: Layers },
-                { id: 'volume', label: '3D Volume', Icon: Box },
+                { id: 'volume', label: 'Volume View', Icon: Box },
                 { id: 'currents', label: 'Current Field', Icon: Waves },
               ] as const
             ).map(({ id, label, Icon }) => (

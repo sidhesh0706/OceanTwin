@@ -372,7 +372,8 @@ export default function OceanTwinLanding({ onEnterExplorer }: Props) {
           <div className="landing-fallback" role="alert">
             <span>CINEMATIC VIEW UNAVAILABLE</span>
             <p>
-              {failure || 'The 3D engine could not start.'} The scientific explorer is unaffected.
+              {failure || 'The globe engine could not start.'} The scientific explorer is
+              unaffected.
             </p>
             <button className="landing-enter" onClick={enter}>
               ENTER EXPLORER <span aria-hidden="true">→</span>

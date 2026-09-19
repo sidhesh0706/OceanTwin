@@ -14,7 +14,7 @@ See [REAL_OCEAN.md](REAL_OCEAN.md) for sources, processing, the real NetCDF uplo
 | Current speed and vectors | Derived from real HYCOM velocity components, not direct float measurements. |
 | NetCDF ingestion | Validated rectilinear CF-style grids; successful upload replaces fields and clears the separate observation catalogue; failure preserves existing data. |
 | Observation ingestion | CSV/TSV/semicolon text, scalar temperature/salinity/chlorophyll profiles, six instrument labels. Native ADCP velocity bins and arbitrary BGC variables remain unsupported. |
-| 3D / 4D exploration | Globe, regional top-down/angled views, continuous depth and model time, volumetric points, currents and local triangulated isosurfaces. Satellite layer is restricted to surface display. |
+| Spatial ocean exploration | Globe, regional top-down/angled views, continuous depth and model time, volumetric points, currents and local triangulated isosurfaces. Satellite layer is restricted to surface display. |
 | Display controls | Palettes, linear/log color mapping, range, opacity and vertical exaggeration. |
 | Analysis | Profile collocation, time offsets, RMSE/MAE/bias, probes, fixed-depth transects and regional statistics. Assimilated analyses are not independent forecast validation. |
 | Interoperability | Bounded provider importer uses official HYCOM OPeNDAP and NOAA ERDDAP. General-purpose runtime OPeNDAP connector and OGC WMS/WCS service remain outstanding. |

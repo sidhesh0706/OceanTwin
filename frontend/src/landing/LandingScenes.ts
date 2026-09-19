@@ -16,7 +16,7 @@ export const LANDING_SCENES: LandingSceneDef[] = [
   {
     id: 'ocean',
     eyebrow: 'OCEANTWIN · GLOBAL OCEAN',
-    title: 'The ocean is a 4D system.',
+    title: 'The ocean changes across depth and time.',
     body: 'Spatial. Vertical. Temporal. Scroll to approach the Earth and the model domain.',
     tint: 0,
   },

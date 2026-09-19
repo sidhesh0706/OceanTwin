@@ -20,7 +20,7 @@ export const GLOBAL_KM = 12_000_000;
 export const REGIONAL_KM = 8_000_000;
 
 // ── Required Cesium Ion assets (§5) ──────────────────────────────────────
-// Photorealistic 3D Tiles are cinematic-only (landing). The explorer uses
+// Photorealistic tiles are cinematic-only (landing). The explorer uses
 // a single 2D satellite imagery layer + optional bathymetry terrain —
 // never stacked tiles + imagery + terrain simultaneously.
 export const ION_SATELLITE_2D = 3830182;

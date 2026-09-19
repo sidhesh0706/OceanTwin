@@ -33,7 +33,7 @@ Use **`data_sources/ocean/OceanTwin_Real_Arabian_Sea.nc`**. It contains the actu
 
 1. Start `run.py`; refresh to show the premium introduction.
 2. Enter the workspace, show temperature, depth/time, currents, then chlorophyll. Explain the different sources and the monthly composite period.
-3. Select an Argo float. Show its temperature/salinity profile and source information, then the top-down and 3D views.
+3. Select an Argo float. Show its temperature/salinity profile and source information, then the top-down and angled views.
 4. Upload the real Arabian Sea NetCDF. The dataset title, domain and available time frames change to the file's contents. This is expected replacement, not additional generated data. The old field cache is cleared.
 5. Model upload clears the separate observation catalogue. Upload `data_sources/argo/real_argo_profiles.csv` separately, or use Settings → **Restore historical dataset** to restore the complete regional workspace and its 54 profiles.
 

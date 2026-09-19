@@ -663,7 +663,7 @@ export default function GlobeExplorer(props: Props) {
     }
   }, [frame, showOutline, globeReady]);
 
-  // ── True 3D water column (volume / iso modes) ─────────────────────────
+  // ── Depth-resolved water column (volume / iso modes) ──────────────────
   useEffect(() => {
     const L = layers.current;
     const Cesium = getCesium();

@@ -123,7 +123,7 @@ export function Controls(p: Props) {
             {(
               [
                 { id: 'slice', label: 'Depth slice', Icon: Layers },
-                { id: 'volume', label: '3D volume', Icon: Box },
+                { id: 'volume', label: 'Volume view', Icon: Box },
                 { id: 'currents', label: 'Current field', Icon: Waves },
               ] as const
             ).map(({ id, label, Icon }, i) => (

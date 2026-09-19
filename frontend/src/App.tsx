@@ -635,7 +635,7 @@ export default function App({
   const tourLabels = [
     dataset.global ? 'Explore all ocean basins at the surface' : 'Explore the ocean surface',
     'Descend to 500 metres depth',
-    'Reveal the complete 3D water column',
+    'Reveal the complete water column',
     'Watch currents evolve through time',
     'Compare a sensor profile with the model',
   ];
@@ -770,10 +770,10 @@ export default function App({
             </button>
             <span>{anchor?.id} · local water column</span>
             <button onClick={() => camera('surface')}>Top-down</button>
-            <button onClick={() => camera('domain')}>3D ocean</button>
+            <button onClick={() => camera('domain')}>Angled view</button>
             <button
               onClick={() => setCameraKey((v) => v + 1)}
-              title="Recenter the fitted 3D view (keeps variable, depth and time)"
+              title="Recenter the fitted angled view (keeps variable, depth and time)"
             >
               Reset view
             </button>
@@ -820,7 +820,7 @@ export default function App({
           <p className="viewer-subtitle">
             Explore, analyze and understand the ocean
             <br />
-            through a unified 3D digital twin.
+            through a unified ocean digital twin.
           </p>
         </div>
       )}
@@ -931,7 +931,7 @@ export default function App({
             onChange={(e) => chooseMode(e.target.value as Mode)}
           >
             <option value="slice">Depth slice</option>
-            <option value="volume">3D volume</option>
+            <option value="volume">Volume view</option>
             {dataset.has_currents && <option value="currents">Current field</option>}
             <option value="iso">Isosurface mesh</option>
           </select>

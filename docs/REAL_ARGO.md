@@ -30,7 +30,7 @@ These observations are made freely available by the International Argo Program a
 1. Start the application, open Observations, and select `ARGO-4903973-003-A` (Arabian Sea) or `ARGO-2902765-220-A` (Bay of Bengal).
 2. The viewer transitions to the ocean and selects the nearest model date. Show the measured temperature/salinity profile, recording time, WMO number, processing mode and source.
 3. Model comparison starts disabled for measured observations. Enable it to demonstrate collocation, explicitly explaining that the current model is a historical assimilative analysis, so these comparisons are not independent forecast validation. The model time offset is shown.
-4. Use Top-down / 3D ocean, depth, currents, analysis and isosurface controls. The fields in these views come from the model, not interpolated Argo coverage.
+4. Use Top-down / Angled view, depth, currents, analysis and isosurface controls. The fields in these views come from the model, not interpolated Argo coverage.
 5. Settings → Load historical Argo restores this setup after uploads. Synthetic test fixtures remain in the repository but are not offered by the main interface.
 
 ## Observation uploads

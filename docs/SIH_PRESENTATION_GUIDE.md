@@ -2,7 +2,7 @@
 
 ## What to claim
 
-OceanTwin is a working local prototype that combines a global Earth view, historical ocean-model fields, satellite chlorophyll, measured Argo profiles, NetCDF ingestion, and scientific analysis in one 4D workspace. The bundled data are traceable historical snapshots rather than a live operational feed.
+OceanTwin is a working local prototype that combines a global Earth view, historical ocean-model fields, satellite chlorophyll, measured Argo profiles, NetCDF ingestion, and scientific analysis in one workspace. The bundled data are traceable historical snapshots rather than a live operational feed.
 
 ## Evidence in the prototype
 
@@ -21,7 +21,7 @@ Use [WALKTHROUGH.md](WALKTHROUGH.md) for the timed 5–7 minute script. The reco
 
 1. **Member 1:** problem, users, and the global Earth/Argo view.
 2. **Member 2:** data pipeline, provenance, NetCDF, and variable limitations.
-3. **Member 3:** local 3D ocean, depth, time, currents, and chlorophyll.
+3. **Member 3:** local ocean view, depth, time, currents, and chlorophyll.
 4. **Member 4:** comparison metrics, transects, upload proof, architecture, and close.
 
 ## Likely questions
