@@ -33,7 +33,13 @@ export function BottomTimeline({
     <footer className="btl" aria-label="Temporal explorer">
       {/* Left: playback controls + timestamp */}
       <div className="btl-left">
-        <button className="btl-play" aria-label={playing ? 'Pause' : 'Play'} onClick={onPlay}>
+        <button
+          className="btl-play"
+          aria-label={playing ? 'Pause' : 'Play'}
+          onClick={onPlay}
+          disabled={n < 2}
+          title={n < 2 ? 'This dataset contains one time frame' : undefined}
+        >
           {playing ? (
             <Pause size={17} fill="currentColor" />
           ) : (
@@ -42,6 +48,7 @@ export function BottomTimeline({
         </button>
         <button
           aria-label="Previous timestep"
+          disabled={n < 2}
           className="btl-step"
           onClick={() => onTime((time - 1 + n) % n)}
         >
@@ -49,6 +56,7 @@ export function BottomTimeline({
         </button>
         <button
           aria-label="Next timestep"
+          disabled={n < 2}
           className="btl-step"
           onClick={() => onTime((time + 1) % n)}
         >
@@ -61,6 +69,7 @@ export function BottomTimeline({
       <div className="btl-track">
         <input
           aria-label="Model time"
+          disabled={n < 2}
           type="range"
           min={0}
           max={n - 1}

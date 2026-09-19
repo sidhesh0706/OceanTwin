@@ -1,11 +1,11 @@
 # OceanTwin five-minute submission video
 
-This script is timed for **5:00** at a clear presentation pace. Record at 1920 × 1080 with browser zoom at 100%. Start at `http://127.0.0.1:8000/` and keep `data_sources/ocean/OceanTwin_Real_Arabian_Sea.nc` ready for upload.
+This is a **5:00 recording plan**. Read naturally and use the remaining seconds in each segment for the specified visual holds; rehearse once with a timer. Record at 1920 × 1080 with browser zoom at 100%. Start at `http://127.0.0.1:8000/` and keep `data_sources/ocean/OceanTwin_Real_Arabian_Sea.nc` ready for upload.
 
 ## Before recording
 
 1. Run `.\.venv\Scripts\python.exe run.py` from the repository root.
-2. Refresh once and wait for **Earth ready**.
+2. If you previously uploaded data, choose **Settings → Restore historical dataset** first. Then refresh and wait for **Earth ready**. Refresh alone does not restore the backend dataset.
 3. Close unrelated windows and notifications.
 4. Rehearse selecting `ARGO-3902755-003-A`, which overlaps the bundled model domain.
 5. Move deliberately and wait for each **Updating** indicator to return to **System Ready**.
@@ -20,7 +20,7 @@ This script is timed for **5:00** at a clear presentation pace. Record at 1920 �
 
 ## 0:30–1:05 — Real global observations
 
-**Record:** Select **View → Earth**. Rotate the globe slightly. Expand **Observations**, briefly show the list, and select `ARGO-3902755-003-A`.
+**Record:** Stay on the globe. Rotate slightly, then expand the right-side **Observations** list and select `ARGO-3902755-003-A` (the fifth listed profile). Hold the transition; do not click again while it is updating.
 
 **Say:**
 
@@ -36,7 +36,7 @@ This script is timed for **5:00** at a clear presentation pace. Record at 1920 �
 
 ## 1:50–2:35 — Depth, volume, and time
 
-**Record:** Close the inspector if needed. Use **Depth** to select 200 m and 500 m. Choose **Layers → Volume View**, switch between **Top-down** and **Angled view**, then advance the timeline once.
+**Record:** Close the inspector. Open **Depth**, select 200 m then 500 m, and close the drawer. Select **Layers → Volume View**, then press **Escape**. Show **Top-down** and **Angled view**. Click **Next timestep** once, pause on 13 February, then **Previous timestep** to return to 12 February. Hold each finished view for two seconds.
 
 **Say:**
 
@@ -44,7 +44,7 @@ This script is timed for **5:00** at a clear presentation pace. Record at 1920 �
 
 ## 2:35–3:15 — Currents and chlorophyll
 
-**Record:** Select **Current Speed → Current Field**. Pause for the vectors, then select **Chlorophyll** and show its surface-only state and source note.
+**Record:** Use the right-side **Scientific variable** dropdown: select **Current Speed**, then **Current field mode**. Pause on the field. Select **Chlorophyll** and point to its source note, surface depth and disabled Volume control.
 
 **Say:**
 
@@ -52,7 +52,7 @@ This script is timed for **5:00** at a clear presentation pace. Record at 1920 �
 
 ## 3:15–4:00 — Scientific analysis
 
-**Record:** Return to **Temperature → Depth Slice**. Run **Analysis → Profile Probe** on a clearly wet point. Close it, then run **Transect** and select two wet points. Pause on the result chart.
+**Record:** Select **Temperature** and **Depth slice mode**. Set depth to **0 m**. Open **Analysis → Profile Probe**; enter latitude **15**, longitude **63**, then click **Run analysis**. Hold the descending depth axis and numeric table. Close the analysis. Open **Analysis → Transect**; enter A = **15, 63**, B = **10, 68**, then click **Run analysis**. Hold the chart and **776.86 km** result. Close the analysis.
 
 **Say:**
 
@@ -60,15 +60,15 @@ This script is timed for **5:00** at a clear presentation pace. Record at 1920 �
 
 ## 4:00–4:40 — NetCDF ingestion
 
-**Record:** Open **Settings → Load NetCDF / observation CSV** and upload `OceanTwin_Real_Arabian_Sea.nc`. Wait for success, then show the changed domain, time axis, dataset label, and model inspection stations.
+**Record:** Open **Settings → Load NetCDF / observation CSV** and upload `OceanTwin_Real_Arabian_Sea.nc`. Wait for **UPLOADED NETCDF DATA**. Show **Arabian Sea · 13 February 2026**, **Frame 01 / 1**, and **5 NetCDF stations**. Expand **Observations**, select **MODEL-STATION-03**, then click **Top-down**. Hold the **UPLOADED MODEL WATER COLUMN** profile.
 
 **Say:**
 
-> OceanTwin can ingest a compatible NetCDF file during the session. The service validates coordinates, dimensions, units, missing values, aliases, file size, and decoded-memory bounds before activation. The interface then rebuilds its domain, variables, time axis, and inspection stations from the uploaded file. Invalid files are rejected without replacing the working dataset.
+> OceanTwin can ingest a compatible NetCDF file during the session. The service validates coordinates, dimensions, units, missing values, aliases, file size, and decoded-memory bounds before activation. The interface then rebuilds its domain, variables, time axis, and inspection stations from the uploaded file. These five stations sample the uploaded model; they are not additional measured floats. Invalid files are rejected without replacing the working dataset.
 
 ## 4:40–5:00 — Architecture and close
 
-**Record:** Restore the historical dataset and finish on the globe with Argo markers visible.
+**Record:** Close the inspector. Select **Settings → Restore historical dataset**. Wait for **System Ready**, then hold the globe with 54 Argo profiles for the closing line.
 
 **Say:**
 
@@ -90,4 +90,20 @@ Do not describe the bundled data as live, call the chlorophyll product daily, cl
 - Press **Escape** to close an obstructing panel.
 - Use **Reset view** if the regional camera becomes awkward.
 - Choose another clearly wet point when an analysis click lands on land.
-- Refresh to return to a clean introduction and historical workspace.
+- Restore the historical dataset using **Settings**; then refresh to replay the introduction. Refresh preserves the currently active server dataset.
+
+## Timing and recording technique
+
+- Record the screen and narration separately if file-picker handling makes a single take awkward. Keep real interactions and results; trim idle waiting between shots.
+- Capture at 1080p, browser zoom 100%, hardware acceleration enabled. Keep the pointer away from charts during visual holds to avoid stray tooltips.
+- Close each drawer before showcasing the ocean. Wait for System Ready before recording a result.
+- The spoken script leaves room for clicking and visual holds. If a segment runs long, shorten the hold rather than rushing the scientific explanation.
+- Optional four-member split: member 1, 0:00–1:05; member 2, 1:05–2:35; member 3, 2:35–4:00; member 4, 4:00–5:00.
+
+## Questions to prepare for
+
+**Why is the colored field regional?** The bundled HYCOM source covers the Indian Ocean window. Global Argo profiles are real observations, but they do not create a global gridded model. Outside the model window we show the measured profile without unsupported comparison values.
+
+**Does Argo measure the chlorophyll and speed shown here?** These Core Argo profiles measure temperature and salinity. Chlorophyll is NASA MODIS monthly surface data; current speed is derived from HYCOM u/v.
+
+**Is every problem-statement item complete?** The demonstrated exploration, ingestion and analysis workflow is implemented. General runtime OPeNDAP, OGC WMS/WCS and a dynamic plugin registry remain roadmap work. See SUBMISSION_READINESS.md for the precise requirement mapping.

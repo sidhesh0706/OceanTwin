@@ -595,11 +595,11 @@ function World(props: SceneProps) {
   const focus = selectedObs
     ? { x: p.x(selectedObs.longitude), z: p.z(selectedObs.latitude) }
     : null;
-  const regional =
-    dataset.bounds.longitude[0] <= 45 &&
-    dataset.bounds.longitude[1] >= 100 &&
-    dataset.bounds.latitude[1] >= 28 &&
-    dataset.bounds.latitude[0] <= -12;
+  const inBounds = (lon: number, lat: number) =>
+    lon >= dataset.bounds.longitude[0] &&
+    lon <= dataset.bounds.longitude[1] &&
+    lat >= dataset.bounds.latitude[0] &&
+    lat <= dataset.bounds.latitude[1];
   return (
     <>
       <color attach="background" args={['#020407']} />
@@ -679,22 +679,18 @@ function World(props: SceneProps) {
         depth={frame.slice.depth ?? 0}
         anchor={focus ?? { x: 0, z: 0 }}
       />
-      {regional && (
-        <group>
-          <Html position={[p.x(78.5), 0.2, p.z(22.5)]} center>
-            <span className="region-label">I N D I A</span>
+      {[
+        { lon: 78.5, lat: 22.5, text: 'I N D I A', className: 'region-label' },
+        { lon: 63, lat: 15, text: 'ARABIAN SEA', className: 'sea-label' },
+        { lon: 88, lat: 17, text: 'BAY OF BENGAL', className: 'sea-label' },
+        { lon: 82, lat: -8, text: 'INDIAN OCEAN', className: 'sea-label large' },
+      ]
+        .filter(({ lon, lat }) => inBounds(lon, lat))
+        .map(({ lon, lat, text, className }) => (
+          <Html key={text} position={[p.x(lon), 0.2, p.z(lat)]} center>
+            <span className={className}>{text}</span>
           </Html>
-          <Html position={[p.x(63), 0.15, p.z(5)]} center>
-            <span className="sea-label">ARABIAN SEA</span>
-          </Html>
-          <Html position={[p.x(88), 0.15, p.z(17)]} center>
-            <span className="sea-label">BAY OF BENGAL</span>
-          </Html>
-          <Html position={[p.x(82), 0.15, p.z(-8)]} center>
-            <span className="sea-label large">INDIAN OCEAN</span>
-          </Html>
-        </group>
-      )}
+        ))}
     </>
   );
 }

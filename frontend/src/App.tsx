@@ -786,7 +786,7 @@ export default function App({
             <button className={showField ? 'active' : ''} onClick={() => setShowField(true)}>
               Ocean overlay
             </button>
-            <span>Select an Argo float to enter the ocean</span>
+            <span>Select a float or station to explore its profile</span>
           </>
         )}
       </div>

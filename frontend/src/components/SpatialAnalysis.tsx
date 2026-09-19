@@ -219,6 +219,7 @@ export function SpatialAnalysis({
                 />
                 <YAxis
                   type="number"
+                  reversed={profile}
                   dataKey={profile ? 'depth' : 'value'}
                   domain={profile ? [0, dataset.bounds.depth[1]] : ['auto', 'auto']}
                   tick={{ fill: '#adc3ce', fontSize: 10 }}

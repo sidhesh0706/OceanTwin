@@ -52,8 +52,9 @@ export function RightPanel({
   const argoCount = observations.filter((o) => o.instrument_type === 'ARGO' && argo).length;
   const gliderCount = observations.filter((o) => o.instrument_type === 'GLIDER' && gliders).length;
   const otherCount = observations.filter(
-    (o) => !['ARGO', 'GLIDER'].includes(o.instrument_type) && (argo || gliders),
+    (o) => !o.model_station && !['ARGO', 'GLIDER'].includes(o.instrument_type) && gliders,
   ).length;
+  const stationCount = observations.filter((o) => o.model_station && gliders).length;
 
   // Domain label
   const [latS, latN] = dataset.bounds.latitude.map((v) => +v.toFixed(2));
@@ -196,10 +197,17 @@ export function RightPanel({
             Gliders
             <strong>{gliderCount}</strong>
           </div>
+          {stationCount > 0 && (
+            <div>
+              <span className="obs-glider-dot" style={{ background: '#4EA4FF' }} />
+              NetCDF stations
+              <strong>{stationCount}</strong>
+            </div>
+          )}
           {otherCount > 0 && (
             <div>
               <span className="obs-glider-dot" style={{ background: '#4EA4FF' }} />
-              CTD / BGC
+              Other instruments
               <strong>{otherCount}</strong>
             </div>
           )}

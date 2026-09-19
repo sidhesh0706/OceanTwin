@@ -90,6 +90,13 @@ export function ToolRail(p: Props) {
   // A globe-to-ocean transition changes the entire interaction context.
   // Close any floating drawer so the regional scene and profile arrive cleanly.
   useEffect(() => setOpen(null), [p.local]);
+  useEffect(() => {
+    const close = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setOpen(null);
+    };
+    window.addEventListener('keydown', close);
+    return () => window.removeEventListener('keydown', close);
+  }, []);
 
   return (
     <>
@@ -204,7 +211,11 @@ export function ToolRail(p: Props) {
               <button
                 key={id}
                 className={`fp-mode-btn ${p.mode === id ? 'active' : ''}`}
-                disabled={id === 'currents' && !p.dataset.has_currents}
+                disabled={
+                  (id === 'currents' && !p.dataset.has_currents) ||
+                  (id === 'volume' &&
+                    p.dataset.variables.find((v) => v.id === p.variable)?.surface_only)
+                }
                 onClick={() => p.onMode(id)}
               >
                 <Icon size={14} /> {label}
