@@ -113,7 +113,9 @@ flowchart LR
 - **Data formats:** NetCDF, JSON, GeoJSON, CSV/TSV
 - **Deployment:** single local Python process serving the API and optimized frontend
 
-## Run the submission build
+## Quick start
+
+OceanTwin uses one setup command and one runtime entry point. The application serves the optimized interface and API together at `http://127.0.0.1:8000/`.
 
 ### Requirements
 
@@ -122,7 +124,7 @@ flowchart LR
 - A WebGL-capable browser with hardware acceleration.
 - Internet access during first-time dependency installation only.
 
-### Windows and PyCharm setup
+### Windows
 
 From the repository root:
 
@@ -133,25 +135,35 @@ python setup_project.py
 
 Open [http://127.0.0.1:8000/](http://127.0.0.1:8000/).
 
-For PyCharm, select `.venv\Scripts\python.exe` as the interpreter and run `run.py` from the repository root.
+### macOS and Linux
 
-Useful routes:
+```bash
+python3 setup_project.py
+./.venv/bin/python run.py
+```
 
-- Introduction: `http://127.0.0.1:8000/`
-- Direct explorer: `http://127.0.0.1:8000/?explore`
-- Interactive API contract: `http://127.0.0.1:8000/docs`
+The setup command creates an isolated Python environment, installs locked backend dependencies, installs deterministic frontend dependencies with `npm ci`, prepares local Cesium assets, and builds the optimized interface. Subsequent launches only require `run.py`.
 
-The setup script creates the virtual environment, installs locked Python dependencies, runs `npm ci`, prepares local Cesium assets, and builds the optimized frontend.
+### Evaluation routes
+
+- **Presentation entry:** `http://127.0.0.1:8000/`
+- **Direct scientific workspace:** `http://127.0.0.1:8000/?explore`
+- **Interactive API contract:** `http://127.0.0.1:8000/docs`
 
 ## Verification
 
-```powershell
+```text
+# Windows
 .\.venv\Scripts\python.exe -m pytest -q
-Push-Location frontend
-npm test
-npm run format:check
-npm run build
-Pop-Location
+npm --prefix frontend test
+npm --prefix frontend run format:check
+npm --prefix frontend run build
+
+# macOS / Linux
+./.venv/bin/python -m pytest -q
+npm --prefix frontend test
+npm --prefix frontend run format:check
+npm --prefix frontend run build
 ```
 
 The backend suite covers dataset metadata, interpolation, temporal changes, currents, API validation, uploads, rollback behavior, periodic coordinates, dateline transects, profiles, comparisons, and regional statistics. Frontend checks cover geographic interpolation, periodic seams, coastline gaps, masking, and isosurface geometry.
@@ -197,7 +209,7 @@ frontend/public/          Bundled Earth imagery, geography, and Cesium assets
 frontend/scripts/         Scientific rendering checks and asset preparation
 data_sources/             Preserved provider subsets and prepared upload sample
 docs/                     Validation, provenance, presentation, and recording guides
-run.py                    PyCharm and production entry point
+run.py                    Single-process application entry point
 setup_project.py          Reproducible local setup
 ```
 

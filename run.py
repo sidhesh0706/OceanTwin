@@ -1,4 +1,4 @@
-"""PyCharm entry point: select the .venv interpreter and run this file."""
+"""Single-process OceanTwin entry point for the API and built interface."""
 
 import uvicorn
 

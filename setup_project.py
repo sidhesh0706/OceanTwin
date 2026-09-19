@@ -1,4 +1,4 @@
-"""One-time local setup, runnable from PyCharm or a terminal with Python 3.12+."""
+"""Cross-platform one-time setup for OceanTwin with Python 3.12+."""
 
 import os
 import shutil
@@ -23,7 +23,7 @@ def main():
     npm = shutil.which("npm.cmd" if os.name == "nt" else "npm")
     if not npm:
         raise SystemExit(
-            "Node.js 22 LTS and npm are required. Install Node.js, restart PyCharm, and retry."
+            "Node.js 22 LTS and npm are required. Install Node.js, reopen your terminal, and retry."
         )
     environment = ROOT / ".venv"
     interpreter = environment / (
@@ -48,7 +48,7 @@ def main():
     )
     run([npm, "ci"], ROOT / "frontend")
     run([npm, "run", "build"], ROOT / "frontend")
-    print("\nOceanTwin is ready. Select .venv in PyCharm and run run.py.")
+    print(f"\nOceanTwin is ready. Start it with: {interpreter} run.py")
     print("Open http://127.0.0.1:8000 in your browser.")
 
 
