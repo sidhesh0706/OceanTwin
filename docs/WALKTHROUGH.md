@@ -1,109 +1,161 @@
-# OceanTwin five-minute submission video
+# OceanTwin — exact five-minute video script
 
-This is a **5:00 recording plan**. Read naturally and use the remaining seconds in each segment for the specified visual holds; rehearse once with a timer. Record at 1920 × 1080 with browser zoom at 100%. Start at `http://127.0.0.1:8000/` and keep `data_sources/ocean/OceanTwin_Real_Arabian_Sea.nc` ready for upload.
+Ten 30-second blocks, with precise recording actions and voiceover. Record the real application at 1920 × 1080, 100% browser zoom. Record narration separately if necessary, then trim only idle loading/file-picker time. Keep each result visible long enough to read. The sub-times below are editing targets, not promises of network or rendering speed.
 
-## Before recording
+## Prepare before recording
 
-1. Run `.\.venv\Scripts\python.exe run.py` from the repository root.
-2. If you previously uploaded data, choose **Settings → Restore historical dataset** first. Then refresh and wait for **Earth ready**. Refresh alone does not restore the backend dataset.
-3. Close unrelated windows and notifications.
-4. Rehearse selecting `ARGO-3902755-003-A`, which overlaps the bundled model domain.
-5. Move deliberately and wait for each **Updating** indicator to return to **System Ready**.
+1. Start from the repository root: `.\.venv\Scripts\python.exe run.py`.
+2. Open `http://127.0.0.1:8000/`. If an uploaded dataset is active, enter the workspace and choose **Settings → Restore historical dataset**. Refresh to replay the introduction. Refresh alone does not reset the active server dataset.
+3. Wait for **Earth ready**. Close notifications and unrelated browser tabs. Enable hardware acceleration.
+4. Keep `data_sources/ocean/OceanTwin_Real_Arabian_Sea.nc` ready in the file picker.
+5. Rehearse the sequence once. Wait for **System Ready** before capturing a result. The selected float automatically chooses the nearest model frame, 12 February.
+6. Record exactly the controls below. Do not open external source links during the take.
 
-## 0:00–0:30 — Problem and solution
+## 0:00–0:30 | Introduction and data identity
 
-**Record:** Hold the introduction for two seconds, then click **Explore the ocean** and let the globe settle.
+**Screen recording**
 
-**Say:**
+- **0:00–0:08:** Hold the introduction: OceanTwin title, globe and “Explore beneath the surface.”
+- **0:08–0:16:** Move the pointer to the footer: **54 MEASURED ARGO PROFILES**, then **HISTORICAL HYCOM + NASA MODIS**. Do not open the attribution popup.
+- **0:16–0:23:** Click **Explore the ocean** once. Let the transition finish.
+- **0:23–0:30:** Hold the globe and its observation markers.
 
-> India’s ocean data is powerful, but it is distributed across model grids, satellite products, instrument profiles, depths, and timestamps. OceanTwin brings these sources into one explainable workspace. A user can begin with the Earth, locate a real observation, descend into its surrounding water column, and perform scientific analysis without losing the data’s source or limitations.
+**Voiceover**
 
-## 0:30–1:05 — Real global observations
+> Ocean data arrives as separate files, model grids and instrument profiles. OceanTwin brings them into one browser workspace, connecting the globe to the water column. We combine measured Argo observations, historical HYCOM ocean fields and NASA MODIS surface chlorophyll. The Earth photograph supplies geographic context; the scientific layers have their own sources and dates.
 
-**Record:** Stay on the globe. Rotate slightly, then expand the right-side **Observations** list and select `ARGO-3902755-003-A` (the fifth listed profile). Hold the transition; do not click again while it is updating.
+## 0:30–1:00 | Select a real Argo float
 
-**Say:**
+**Screen recording**
 
-> This globe shows 54 measured Core Argo profiles across the Indian, Atlantic, and Pacific oceans. The archived profiles retain WMO number, cycle, timestamp, quality-control status, maximum depth, and official GDAC provenance. The global blue ocean provides geographic context, while scientific colour appears only where the active dataset has coverage.
+- **0:30–0:37:** Slowly drag the globe a short distance to reveal the global markers; avoid a full spin.
+- **0:37–0:43:** Click the right-side **Observations** button, not the uppercase navigation tab.
+- **0:43–0:49:** Click **ARGO-3902755-003-A** (fifth in the bundled list).
+- **0:49–1:00:** Let the regional transition finish. Hold the inspector and flat ocean scene.
 
-## 1:05–1:50 — Float to local water column
+**Voiceover**
 
-**Record:** Let the transition finish. Point to **Arabian Sea · Indian Ocean**, **India**, coordinates, timestamp, and depth. Show the temperature profile and enable **Compare with model**.
+> Our historical catalogue contains 54 real Core Argo profiles across the Indian, Atlantic and Pacific oceans. Selecting this Arabian Sea float opens its surrounding model water column. The observation stays connected to its location, collection time, maximum depth and official source, so the visualization remains traceable to the underlying measurement.
 
-**Say:**
+## 1:00–1:30 | Measured profile and model comparison
 
-> This float lies in the Arabian Sea inside the historical model window. OceanTwin opens the regional water column and preserves the instrument context. This curve is measured Argo temperature, not generated display data. We can switch to salinity and compare the profile with the model at the float coordinates and nearest model time. RMSE, MAE, bias, matched samples, and time offset are calculated from the overlapping values.
+**Screen recording**
 
-## 1:50–2:35 — Depth, volume, and time
+- **1:00–1:07:** Point to **MEASURED ARGO PROFILE**, WMO/cycle, timestamp and source link in the inspector.
+- **1:07–1:13:** Hold the temperature-versus-depth chart; point from the surface down to deeper values.
+- **1:13–1:19:** Check **Compare with model**. Wait for the second curve and metrics.
+- **1:19–1:30:** Hold **RMSE**, **MAE**, **BIAS**, matched levels and the model-time offset. With the unchanged bundled data: temperature RMSE ≈ **0.372 °C**, **997 matched levels**, offset **9.2 h**.
 
-**Record:** Close the inspector. Open **Depth**, select 200 m then 500 m, and close the drawer. Select **Layers → Volume View**, then press **Escape**. Show **Top-down** and **Angled view**. Click **Next timestep** once, pause on 13 February, then **Previous timestep** to return to 12 February. Hold each finished view for two seconds.
+**Voiceover**
 
-**Say:**
+> This curve is measured Argo temperature. We compare it with HYCOM at the float coordinates and nearest available model time. OceanTwin calculates RMSE, mean absolute error and bias from overlapping samples, and shows the time offset explicitly. These metrics describe agreement with the historical analysis; they are not an independent forecast-accuracy claim.
 
-> The HYCOM analysis contains 36 source depth levels down to two thousand metres. OceanTwin supports continuous display-depth selection, depth slices, sampled volume rendering, and fitted camera views. The timeline moves through historical analysis frames from 11 to 13 February 2026. Each interaction requests the selected variable, depth, and time from the backend rather than playing a pre-rendered animation.
+## 1:30–2:00 | Depth and regional views
 
-## 2:35–3:15 — Currents and chlorophyll
+**Screen recording**
 
-**Record:** Use the right-side **Scientific variable** dropdown: select **Current Speed**, then **Current field mode**. Pause on the field. Select **Chlorophyll** and point to its source note, surface depth and disabled Volume control.
+- **1:30–1:34:** Click **Close inspector**.
+- **1:34–1:40:** Click **Depth**, then **200**. Hold the updated slice.
+- **1:40–1:46:** Click **500**. Hold the updated depth, then close the Depth drawer.
+- **1:46–1:52:** Click the right-side **Volume view mode** button.
+- **1:52–2:00:** Click **Top-down**, pause, then **Angled view** and hold. Keep the pointer off the ocean labels.
 
-**Say:**
+**Voiceover**
 
-> Current speed is calculated from HYCOM eastward and northward velocity components. Colour shows magnitude, while vectors and particles communicate direction. Chlorophyll comes from a separate NASA Aqua MODIS February 2026 monthly surface composite. OceanTwin locks it to the surface and preserves missing satellite pixels. The selected Core Argo floats measure temperature and salinity; they do not measure the displayed chlorophyll or current speed.
+> The model contains 36 source depth levels reaching two thousand metres. Here we move from two hundred to five hundred metres, then examine the sampled volume from above and at an angle. The regional view preserves geographic context while the depth scale reveals the water column. Vertical exaggeration supports exploration rather than representing actual seabed geometry.
 
-## 3:15–4:00 — Scientific analysis
+## 2:00–2:30 | Historical time and currents
 
-**Record:** Select **Temperature** and **Depth slice mode**. Set depth to **0 m**. Open **Analysis → Profile Probe**; enter latitude **15**, longitude **63**, then click **Run analysis**. Hold the descending depth axis and numeric table. Close the analysis. Open **Analysis → Transect**; enter A = **15, 63**, B = **10, 68**, then click **Run analysis**. Hold the chart and **776.86 km** result. Close the analysis.
+**Screen recording**
 
-**Say:**
+- **2:00–2:06:** Click **Next timestep** at the bottom. Hold **13 Feb 2026** and **Frame 03 / 3**.
+- **2:06–2:11:** Click **Previous timestep** to return to **12 Feb 2026**.
+- **2:11–2:18:** Open **Scientific variable** on the right; select **Current Speed**.
+- **2:18–2:24:** Click **Current field mode**. Wait for the field to settle.
+- **2:24–2:30:** Hold the flow display and speed legend in **m/s**.
 
-> The viewer is also an analysis workspace. A profile probe samples supported variables through the water column. A transect follows the shortest geographic path between two selected coordinates at the active depth. Region statistics can calculate finite-cell mean, minimum, maximum, median, and standard deviation. Missing coastal cells remain missing, so OceanTwin does not invent values over land or unsupported water.
+**Voiceover**
 
-## 4:00–4:40 — NetCDF ingestion
+> The timeline explores three historical analysis frames from eleven to thirteen February. Each selection updates the displayed field. Current speed is calculated from HYCOM eastward and northward velocity components. The flow display communicates direction and magnitude, while the animated particles are illustrative. We keep these model-derived currents distinct from the Argo measurements.
 
-**Record:** Open **Settings → Load NetCDF / observation CSV** and upload `OceanTwin_Real_Arabian_Sea.nc`. Wait for **UPLOADED NETCDF DATA**. Show **Arabian Sea · 13 February 2026**, **Frame 01 / 1**, and **5 NetCDF stations**. Expand **Observations**, select **MODEL-STATION-03**, then click **Top-down**. Hold the **UPLOADED MODEL WATER COLUMN** profile.
+## 2:30–3:00 | Chlorophyll and its limits
 
-**Say:**
+**Screen recording**
 
-> OceanTwin can ingest a compatible NetCDF file during the session. The service validates coordinates, dimensions, units, missing values, aliases, file size, and decoded-memory bounds before activation. The interface then rebuilds its domain, variables, time axis, and inspection stations from the uploaded file. These five stations sample the uploaded model; they are not additional measured floats. Invalid files are rejected without replacing the working dataset.
+- **2:30–2:36:** Select **Chlorophyll** in **Scientific variable**.
+- **2:36–2:44:** Hold its source paragraph and **mg/m³** legend on the right.
+- **2:44–2:51:** Point to **0 m** and the disabled Volume control; do not click it.
+- **2:51–3:00:** Select **Temperature**, then **Depth slice mode**. Chlorophyll reset depth to the surface; confirm **0 m** before continuing.
 
-## 4:40–5:00 — Architecture and close
+**Voiceover**
 
-**Record:** Close the inspector. Select **Settings → Restore historical dataset**. Wait for **System Ready**, then hold the globe with 54 Argo profiles for the closing line.
+> Chlorophyll comes from NASA Aqua MODIS: a February monthly surface composite. It indicates surface pigment concentration and is restricted to the surface; missing satellite pixels remain missing. These Core Argo floats measure temperature and salinity, not the chlorophyll or current speed shown here. OceanTwin makes those distinctions visible instead of mixing sources into a misleading profile.
 
-**Say:**
+## 3:00–3:30 | Profile probe
 
-> OceanTwin combines React, Cesium, scientific WebGL visualization, FastAPI, xarray, NumPy, and NetCDF in one locally deployable application. It turns fragmented ocean files into a clear journey: locate, descend, compare, and analyze. OceanTwin—global context, local evidence, and ocean data people can understand.
+**Screen recording**
 
-## Use these claims
+- **3:00–3:05:** Click **Analysis → Profile Probe**.
+- **3:05–3:13:** Enter **A latitude = 15**, **A longitude = 63**.
+- **3:13–3:18:** Click **Run analysis** once; wait for the result.
+- **3:18–3:27:** Hold the temperature-depth chart and table. Scroll inside the panel slightly if needed to reveal deeper rows.
+- **3:27–3:30:** Click **Close spatial analysis**.
 
-- Historical HYCOM analysis
-- Measured Core Argo temperature and salinity profiles
-- NASA MODIS monthly satellite surface chlorophyll
-- Model-derived current speed
-- Reproducible offline historical snapshot
-- Submission-ready and extensible prototype
+**Voiceover**
 
-Do not describe the bundled data as live, call the chlorophyll product daily, claim that Core Argo measured chlorophyll or currents, or present the prototype as an operational advisory system.
+> We can also investigate a location without selecting a float. At fifteen degrees north and sixty-three degrees east, the profile probe samples the model through the water column. The chart shows depth increasing downward, and the table exposes the values behind the visual. Surface-only chlorophyll remains absent below the surface rather than being extended into invented depths.
 
-## Recording recovery
+## 3:30–4:00 | Ocean transect
 
-- Press **Escape** to close an obstructing panel.
-- Use **Reset view** if the regional camera becomes awkward.
-- Choose another clearly wet point when an analysis click lands on land.
-- Restore the historical dataset using **Settings**; then refresh to replay the introduction. Refresh preserves the currently active server dataset.
+**Screen recording**
 
-## Timing and recording technique
+- **3:30–3:35:** Click **Analysis → Transect**.
+- **3:35–3:45:** Enter **A latitude = 15**, **A longitude = 63**, **B latitude = 10**, **B longitude = 68**.
+- **3:45–3:50:** Click **Run analysis** once.
+- **3:50–3:58:** Hold the temperature-versus-distance chart and **776.86 km** result.
+- **3:58–4:00:** Click **Close spatial analysis**.
 
-- Record the screen and narration separately if file-picker handling makes a single take awkward. Keep real interactions and results; trim idle waiting between shots.
-- Capture at 1080p, browser zoom 100%, hardware acceleration enabled. Keep the pointer away from charts during visual holds to avoid stray tooltips.
-- Close each drawer before showcasing the ocean. Wait for System Ready before recording a result.
-- The spoken script leaves room for clicking and visual holds. If a segment runs long, shorten the hold rather than rushing the scientific explanation.
-- Optional four-member split: member 1, 0:00–1:05; member 2, 1:05–2:35; member 3, 2:35–4:00; member 4, 4:00–5:00.
+**Voiceover**
 
-## Questions to prepare for
+> A transect compares conditions along a geographic route. Here we sample surface temperature between two Arabian Sea coordinates over approximately seven hundred and seventy-seven kilometres. The chart uses distance along the shortest great-circle route at the selected depth. Gaps remain visible where data is unavailable, preserving the difference between a missing value and a scientific result.
 
-**Why is the colored field regional?** The bundled HYCOM source covers the Indian Ocean window. Global Argo profiles are real observations, but they do not create a global gridded model. Outside the model window we show the measured profile without unsupported comparison values.
+## 4:00–4:30 | Upload a real NetCDF file
 
-**Does Argo measure the chlorophyll and speed shown here?** These Core Argo profiles measure temperature and salinity. Chlorophyll is NASA MODIS monthly surface data; current speed is derived from HYCOM u/v.
+**Screen recording**
 
-**Is every problem-statement item complete?** The demonstrated exploration, ingestion and analysis workflow is implemented. General runtime OPeNDAP, OGC WMS/WCS and a dynamic plugin registry remain roadmap work. See SUBMISSION_READINESS.md for the precise requirement mapping.
+- **4:00–4:05:** Click **Settings → Load NetCDF / observation CSV**.
+- **4:05–4:12:** Select **OceanTwin_Real_Arabian_Sea.nc** from the prepared folder. Confirm the file-picker selection.
+- **4:12–4:20:** Wait for the success message and **UPLOADED NETCDF DATA**. Trim idle waiting if necessary.
+- **4:20–4:30:** Point to **Arabian Sea · 13 February 2026**, the changed domain, **5 NetCDF stations**, and **Frame 01 / 1**. The time controls are disabled because this file has one frame.
+
+**Voiceover**
+
+> Now we upload a real Arabian Sea NetCDF subset. OceanTwin validates the file before replacing the active dataset, then rebuilds the domain, variables and timeline from its contents. This file has one historical time frame. Five clickable inspection stations provide access to its model water columns; they are sampled model locations, not newly measured Argo floats.
+
+## 4:30–5:00 | Inspect uploaded data and close
+
+**Screen recording**
+
+- **4:30–4:35:** Click the right-side **Observations** list and select **MODEL-STATION-03**.
+- **4:35–4:42:** Let the transition finish. Hold **UPLOADED MODEL WATER COLUMN**, its temperature profile, date and coordinates.
+- **4:42–4:48:** Click **Top-down** and hold the regional view with the profile beside it.
+- **4:48–4:55:** Close the inspector. Click **Settings → Restore historical dataset** and wait for the globe.
+- **4:55–5:00:** Hold the restored globe and OceanTwin branding for the final line. End at exactly 5:00.
+
+**Voiceover**
+
+> Selecting a station opens the uploaded water column and regional view, making a scientific file immediately explorable. OceanTwin connects observation, visualization and analysis through a browser interface backed by Python scientific services. Our next interoperability milestones are general OPeNDAP access and OGC services. OceanTwin: global context, local evidence, and ocean data people can understand.
+
+## Presenter split and recovery
+
+For four speakers: member 1 covers 0:00–1:00; member 2 covers 1:00–2:30; member 3 covers 2:30–4:00; member 4 covers 4:00–5:00. One operator should control the mouse throughout, or assemble the ten clips after recording.
+
+If rendering takes longer, keep the actual result and trim idle waiting in the edit. Never fake data changes. Press Escape to close a tool drawer, use Reset view to recover camera framing, and restore the historical dataset before another full take.
+
+## Explain the attribution if asked
+
+The Cesium “Data attribution” popup credits the Earth background photograph: NASA Earth Observatory, Reto Stöckli, Blue Marble, January 2004. That is the image date, not the observation date. Argo profiles are sourced from official GDAC data; the selected inspector shows their provenance. HYCOM fields cover 11–13 February 2026, while MODIS chlorophyll is a February 2026 monthly surface composite. The front-page source labels distinguish these sources.
+
+## Scope to state accurately
+
+The gridded model is regional; global Argo observations do not imply a global model field. This is an archived historical workflow, not live monitoring. General runtime OPeNDAP, OGC WMS/WCS and dynamic plugin registration remain outstanding. See SUBMISSION_READINESS.md for the full problem-statement mapping. Do not claim guaranteed selection, complete operational deployment or full compliance.

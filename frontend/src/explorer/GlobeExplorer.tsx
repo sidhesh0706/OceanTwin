@@ -183,7 +183,8 @@ export default function GlobeExplorer(props: Props) {
         if (baseType === 'offline' && Cesium.SingleTileImageryProvider?.fromUrl) {
           try {
             const earth = await Cesium.SingleTileImageryProvider.fromUrl('/earth-blue-marble.jpg', {
-              credit: 'NASA Earth Observatory · Reto Stöckli · Blue Marble (January 2004)',
+              credit:
+                'Earth background imagery: NASA Earth Observatory · Reto Stöckli · Blue Marble (January 2004). Scientific observations and model fields have separate source labels.',
             });
             if (cancelled) return;
             viewer.imageryLayers.addImageryProvider(earth);

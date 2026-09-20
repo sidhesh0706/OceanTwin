@@ -796,6 +796,11 @@ export default function App({
           ready={!!baseName}
           synthetic={dataset.synthetic}
           measuredCount={observations.filter((o) => !o.synthetic && !o.model_station).length}
+          argoCount={
+            observations.filter(
+              (o) => o.instrument_type === 'ARGO' && !o.synthetic && !o.model_station,
+            ).length
+          }
           stationCount={observations.filter((o) => o.model_station).length}
           onEnter={() => {
             onEnter?.();

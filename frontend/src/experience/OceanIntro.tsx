@@ -4,12 +4,14 @@ export default function OceanIntro({
   ready,
   synthetic,
   measuredCount,
+  argoCount,
   stationCount,
   onEnter,
 }: {
   ready: boolean;
   synthetic: boolean;
   measuredCount: number;
+  argoCount: number;
   stationCount: number;
   onEnter: () => void;
 }) {
@@ -56,10 +58,18 @@ export default function OceanIntro({
         <span>
           {stationCount > 0
             ? `${stationCount} NETCDF STATIONS`
-            : `${measuredCount} MEASURED PROFILES`}
+            : argoCount === measuredCount && argoCount > 0
+              ? `${argoCount} MEASURED ARGO PROFILES`
+              : `${measuredCount} MEASURED OBSERVATION PROFILES`}
         </span>
-        <span>{synthetic ? 'SYNTHETIC MODEL' : 'LOCAL MODEL DATA'}</span>
-        <span>NASA Earth imagery · Scientific model overlays</span>
+        <span>
+          {synthetic
+            ? 'SYNTHETIC MODEL'
+            : stationCount > 0
+              ? 'UPLOADED NETCDF FIELDS'
+              : 'HISTORICAL HYCOM + NASA MODIS'}
+        </span>
+        <span>Earth background: NASA Blue Marble · imagery credit below</span>
       </footer>
     </section>
   );
