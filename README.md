@@ -66,29 +66,6 @@ OceanTwin connects those questions in a single evidence-aware workflow.
 | Extensibility | Dataset adapters, analysis services, API routes, and renderers are separated for future data sources. |
 | Safety and bounds | Upload size, decoded-memory limits, coordinates, dimensions, calendars, and units are validated before activation. |
 
-## Verified evidence
-
-- **54 measured Argo profiles** and **37,357 retained quality-controlled measurements**.
-- **36 model depth levels** to **2,000 m** across three historical analysis frames.
-- Real HYCOM temperature, salinity, eastward velocity, and northward velocity source arrays.
-- Current speed calculated as `sqrt(u² + v²)`.
-- NASA Aqua MODIS chlorophyll retained as a surface-only monthly composite.
-- **38 backend tests**, **7 frontend scientific-rendering tests**, TypeScript validation, formatting, and production build passing for the submission release.
-
-See [validation evidence](docs/VALIDATION.md), [real ocean data provenance](docs/REAL_OCEAN.md), and [Argo processing and provenance](docs/REAL_ARGO.md).
-
-## Demonstration path
-
-1. Enter from the OceanTwin introduction.
-2. Explore measured Argo coverage on the globe.
-3. Select `ARGO-3902755-003-A` to open the Arabian Sea water column.
-4. Inspect temperature and salinity, then enable model comparison.
-5. Explore depth, model time, currents, and surface chlorophyll.
-6. Run a profile probe or transect.
-7. Upload `data_sources/ocean/OceanTwin_Real_Arabian_Sea.nc` and show the workspace adapting to the file.
-8. Restore the historical workspace.
-
-The exact five-minute recording narration is in [docs/WALKTHROUGH.md](docs/WALKTHROUGH.md).
 
 ## System architecture
 
@@ -212,15 +189,6 @@ docs/                     Validation, provenance, presentation, and recording gu
 run.py                    Single-process application entry point
 setup_project.py          Reproducible local setup
 ```
-
-## Submission resources
-
-- [Five-minute demo script](docs/WALKTHROUGH.md)
-- [SIH presentation guide and judge Q&A](docs/SIH_PRESENTATION_GUIDE.md)
-- [Problem-statement readiness](docs/SUBMISSION_READINESS.md)
-- [Automated and browser validation](docs/VALIDATION.md)
-- [Real ocean dataset provenance](docs/REAL_OCEAN.md)
-- [Argo provenance and quality filtering](docs/REAL_ARGO.md)
 
 ## Roadmap
 
