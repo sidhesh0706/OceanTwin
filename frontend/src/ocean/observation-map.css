@@ -1,0 +1,70 @@
+.observation-map {
+  position: absolute;
+  inset: 80px 22px 35px 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #c6e4ec;
+  overflow: auto;
+  animation: introCopyIn 0.6s ease;
+}
+.observation-map header {
+  width: min(100%, 700px);
+  margin-bottom: 12px;
+}
+.observation-map header span {
+  color: #62d8d3;
+  font-size: 10px;
+  letter-spacing: 2px;
+}
+.observation-map h2 {
+  margin: 8px 0;
+  font-size: 24px;
+}
+.observation-map p {
+  font-size: 12px;
+  line-height: 1.6;
+}
+.observation-map svg {
+  width: min(100%, 620px);
+  min-height: 220px;
+  flex: 1;
+}
+.observation-map-note {
+  max-width: 650px;
+  color: #8aaebb;
+}
+.observation-map select,
+.observation-map button {
+  background: #0b2936;
+  color: #c6e4ec;
+  border: 1px solid #356170;
+  border-radius: 6px;
+  padding: 7px 12px;
+}
+.float-map-marker {
+  cursor: pointer;
+}
+.float-map-marker:focus {
+  outline: none;
+  stroke: white;
+  stroke-width: 4;
+}
+.observation-context {
+  position: absolute;
+  right: 12px;
+  top: 80px;
+  width: 258px;
+  padding: 18px;
+  color: #b8d1dd;
+  font-size: 13px;
+  line-height: 1.7;
+}
+@media (max-width: 900px) {
+  .observation-context {
+    display: none;
+  }
+  .observation-map {
+    inset: 85px 10px 30px;
+  }
+}

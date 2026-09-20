@@ -174,7 +174,7 @@ OceanTwin keeps its claims aligned with the supplied evidence:
 - Current speed is derived from model velocity components; animated particles are a directional visual aid.
 - Comparisons use finite overlapping samples and report `model - observation` statistics.
 - The regional vertical scale is deliberately exaggerated and labelled for exploration.
-- Global floats outside the Indian Ocean model window remain available as measured profiles without unsupported model comparison.
+- Global floats outside the Indian Ocean model window open a local flat geographic map with measured profiles, nearby markers and adjustable map extent, without unsupported model comparison.
 - Transects are fixed-depth paths, and regional statistics are equally weighted grid-cell summaries.
 
 ## Repository guide

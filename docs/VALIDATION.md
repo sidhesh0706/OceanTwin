@@ -23,7 +23,7 @@ The bundled workspace is an offline historical snapshot, not a live feed. HYCOM 
 ## Known limits
 
 - The historical HYCOM field covers the Indian Ocean model window, while the Argo catalogue is global.
-- Argo floats outside the model window show their measured profile on the globe without model-comparison metrics.
+- Argo floats outside the model window open a local flat geographic map and measured profile without model-comparison metrics.
 - Satellite chlorophyll is surface-only and may contain cloud or coverage gaps.
 - The regional vertical view is deliberately exaggerated and is not a bathymetric reconstruction.
 - The current particle animation is illustrative; numeric speed and vectors use the model field.
@@ -48,3 +48,10 @@ Final corrections:
 Layout geometry at the approximately 1920 × 1080 audit viewport showed no horizontal document overflow, and the inspector, active-layer panel and timeline occupied separate bounds. Browser screenshot capture failed in the audit environment, so this is not a complete pixel-level visual certification. No frame-rate benchmark or exhaustive device/browser matrix was run. Rehearse the five-minute sequence on the actual recording laptop before capture.
 
 The prototype supports the documented recording workflow. It is not full problem-statement compliance: general runtime OPeNDAP, OGC WMS/WCS and dynamic plugin registration remain outstanding, as recorded in SUBMISSION_READINESS.md.
+
+
+## Global float flat-map update
+
+Every selected float now opens a local view. Outside the active model domain, a dedicated flat NASA Blue Marble map shows the selected and nearby measured observations, with 20°, 40° and 80° extents and longitude wrapping across the dateline. The existing inspector displays measured temperature/salinity and provenance. Model controls and timeline are hidden; no out-of-domain regional request or fabricated model field is used.
+
+Browser checks verified southern Indian, Atlantic and dateline Pacific float selection, salinity switching, extent changes and return to Earth, without console errors. The model-covered Arabian Sea retains its existing regional water-column workflow.

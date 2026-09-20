@@ -1,3 +1,4 @@
+import { ObservationMap } from './ocean/ObservationMap';
 import { setColorSettings } from './ocean/colors';
 import { Suspense, lazy, useCallback, useEffect, useRef, useState } from 'react';
 import { Maximize, Minimize, X, CircleHelp, Waves } from 'lucide-react';
@@ -94,6 +95,11 @@ export default function App({
   // Brief crossfade whenever the viewer swaps worlds so the handoff reads
   // as a deliberate mode change instead of a hard flash.
   const [entering, setEntering] = useState(false);
+  const observationOnly =
+    scene === 'ocean' &&
+    !!anchor &&
+    !!dataset &&
+    !isInDomain(anchor.longitude, anchor.latitude, dataset);
   const activeFrame = scene === 'ocean' && region ? region.frame : frame;
 
   useEffect(() => {
@@ -265,7 +271,7 @@ export default function App({
 
   // ── Playback ──────────────────────────────────────────────────────────
   useEffect(() => {
-    if (scene !== 'ocean' || !anchor || !frame) {
+    if (scene !== 'ocean' || !anchor || !frame || observationOnly) {
       setRegionBusy(false);
       return;
     }
@@ -290,7 +296,7 @@ export default function App({
         if (!controller.signal.aborted) setRegionBusy(false);
       });
     return () => controller.abort();
-  }, [scene, anchor, frame, revision]);
+  }, [scene, anchor, frame, revision, observationOnly]);
 
   useEffect(() => {
     if (!playing || busy || regionBusy || !dataset) return;
@@ -315,7 +321,7 @@ export default function App({
       if (intro) return;
       if ((e.target as HTMLElement).matches('input,select,textarea,button')) return;
       if (e.key.toLowerCase() === 'p') setPresentation((v) => !v);
-      if (e.code === 'Space') {
+      if (e.code === 'Space' && !observationOnly) {
         e.preventDefault();
         setPlaying((v) => !v);
       }
@@ -328,14 +334,14 @@ export default function App({
     };
     window.addEventListener('keydown', key);
     return () => window.removeEventListener('keydown', key);
-  }, [intro]);
+  }, [intro, observationOnly]);
 
   // ── Helpers ───────────────────────────────────────────────────────────
   const select = (obs: Observation | null) => {
     if (intro) return;
     inspectionRequest.current?.abort();
     setSelected(obs);
-    if (obs && !obs.synthetic && dataset) {
+    if (obs && !obs.synthetic && dataset && isInDomain(obs.longitude, obs.latitude, dataset)) {
       const t = Date.parse(obs.timestamp);
       setTime(
         dataset.times.reduce(
@@ -361,10 +367,11 @@ export default function App({
           (obs.longitude >= dataset.bounds.longitude[0] &&
             obs.longitude <= dataset.bounds.longitude[1]));
       if (!inModelDomain) {
-        setScene('globe');
-        setAnchor(null);
+        setScene('ocean');
+        setAnchor(obs);
         setRegion(null);
-        setPreset('global');
+        setPreset('surface');
+        setError('');
         setCameraKey((v) => v + 1);
       } else if (scene !== 'ocean' || !region?.observations.some((o) => o.id === obs.id)) {
         setAnchor(obs);
@@ -722,6 +729,13 @@ export default function App({
             threshold={threshold}
             onBaseLayer={setBaseName}
           />
+        ) : observationOnly && anchor ? (
+          <ObservationMap
+            key={anchor.id}
+            anchor={anchor}
+            observations={observations}
+            onSelect={select}
+          />
         ) : region ? (
           <Suspense fallback={<div className="ocean-loading">Opening the local water column…</div>}>
             <OceanScene
@@ -768,11 +782,14 @@ export default function App({
             >
               ← Back to Earth
             </button>
-            <span>{anchor?.id} · local water column</span>
-            <button onClick={() => camera('surface')}>Top-down</button>
-            <button onClick={() => camera('domain')}>Angled view</button>
+            <span>
+              {anchor?.id} · {observationOnly ? 'measured profile map' : 'local water column'}
+            </span>
+            {!observationOnly && <button onClick={() => camera('surface')}>Top-down</button>}
+            {!observationOnly && <button onClick={() => camera('domain')}>Angled view</button>}
             <button
               onClick={() => setCameraKey((v) => v + 1)}
+              hidden={observationOnly}
               title="Recenter the fitted angled view (keeps variable, depth and time)"
             >
               Reset view
@@ -815,7 +832,11 @@ export default function App({
         <div className="viewer-hero">
           <h1 className="viewer-title">
             {scene === 'ocean' ? (
-              'Inside the ocean'
+              observationOnly ? (
+                'Explore the float'
+              ) : (
+                'Inside the ocean'
+              )
             ) : (
               <>
                 Earth&apos;s Ocean, <span className="viewer-title-accent">in Depth</span>
@@ -831,7 +852,7 @@ export default function App({
       )}
 
       {/* ── Left tool rail ────────────────────────────────────────────── */}
-      {!presentation && (
+      {!presentation && !observationOnly && (
         <ToolRail
           local={scene === 'ocean'}
           dataset={dataset}
@@ -871,7 +892,7 @@ export default function App({
       )}
 
       {/* ── Right panel ───────────────────────────────────────────────── */}
-      {!presentation && (
+      {!presentation && !observationOnly && (
         <RightPanel
           dataset={scene === 'ocean' && region ? region.dataset : dataset}
           frame={scene === 'ocean' && region ? region.frame : frame}
@@ -891,6 +912,20 @@ export default function App({
         />
       )}
 
+      {observationOnly && (
+        <aside className="observation-context">
+          <h3>Measured float profile</h3>
+          <p>
+            This flat map is centered on the selected observation. Select a marker to inspect its
+            measured depth profile.
+          </p>
+          <p>
+            The active model does not cover this location. Model depth layers, currents, transects
+            and comparison are available within its coverage.
+          </p>
+          <button onClick={() => setScene('globe')}>Choose another float on Earth</button>
+        </aside>
+      )}
       {/* ── Observation / point inspector (floating) ───────────────────── */}
       {analysis && (
         <SpatialAnalysis
@@ -917,7 +952,7 @@ export default function App({
       )}
 
       {/* ── Presentation mode overlay controls ────────────────────────── */}
-      {presentation && (
+      {presentation && !observationOnly && (
         <div className="presentation-controls">
           <select
             aria-label="Presentation variable"
@@ -970,13 +1005,17 @@ export default function App({
 
       {/* ── Scene attribution ─────────────────────────────────────────── */}
       <div className="scene-attribution">
-        {scene === 'ocean'
-          ? 'Local model cutout · depth schematically exaggerated'
-          : `Cesium · WGS84 · ${baseName}`}
-        {mode === 'volume' || mode === 'iso'
-          ? ` · Depth scale ${exaggeration * 100}× (schematic)`
-          : ' · Selected-depth map'}
-        {currents ? ' · Streamlines follow model u/v' : ''}
+        {observationOnly
+          ? 'Measured float location · NASA Blue Marble geographic context'
+          : scene === 'ocean'
+            ? 'Local model cutout · depth schematically exaggerated'
+            : `Cesium · WGS84 · ${baseName}`}
+        {observationOnly
+          ? ''
+          : mode === 'volume' || mode === 'iso'
+            ? ` · Depth scale ${exaggeration * 100}× (schematic)`
+            : ' · Selected-depth map'}
+        {!observationOnly && currents ? ' · Streamlines follow model u/v' : ''}
       </div>
 
       {/* ── Hidden file input ─────────────────────────────────────────── */}
@@ -1036,24 +1075,26 @@ export default function App({
       )}
 
       {/* ── Bottom timeline ───────────────────────────────────────────── */}
-      <BottomTimeline
-        dataset={dataset}
-        frame={frame}
-        time={time}
-        onTime={(t) => {
-          setPlaying(false);
-          setTime(t);
-        }}
-        playing={playing}
-        onPlay={() => setPlaying((v) => !v)}
-        onTour={() => setTour((v) => (v >= 0 ? -1 : 0))}
-        tourActive={tour >= 0}
-        hasTour={
-          dataset.has_currents &&
-          dataset.bounds.depth[1] >= 500 &&
-          dataset.variables.some((v) => v.id === 'temperature')
-        }
-      />
+      {!observationOnly && (
+        <BottomTimeline
+          dataset={dataset}
+          frame={frame}
+          time={time}
+          onTime={(t) => {
+            setPlaying(false);
+            setTime(t);
+          }}
+          playing={playing}
+          onPlay={() => setPlaying((v) => !v)}
+          onTour={() => setTour((v) => (v >= 0 ? -1 : 0))}
+          tourActive={tour >= 0}
+          hasTour={
+            dataset.has_currents &&
+            dataset.bounds.depth[1] >= 500 &&
+            dataset.variables.some((v) => v.id === 'temperature')
+          }
+        />
+      )}
 
       {/* ── Help modal ────────────────────────────────────────────────── */}
       {help && (

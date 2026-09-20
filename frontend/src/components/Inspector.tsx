@@ -209,8 +209,8 @@ export function Inspector({
             )}
           {!insideModelDomain && (
             <p className="synthetic-note">
-              Global Argo profile view. This float is outside the active Indian Ocean model subset,
-              so no local water-column transition or model comparison is available.
+              Measured profile and local geographic view. This float is outside the active model
+              coverage, so surrounding model fields and model comparison are unavailable.
             </p>
           )}
           {!selected.model_station && (
