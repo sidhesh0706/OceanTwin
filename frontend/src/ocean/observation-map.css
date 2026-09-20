@@ -1,38 +1,49 @@
+.observation-only.local-ocean .viewer,
+.observation-only.local-ocean.has-inspector .viewer {
+  left: 32px;
+  right: 32px;
+  top: 170px;
+  bottom: 20px;
+}
 .observation-map {
   position: absolute;
-  inset: 80px 22px 35px 30px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  inset: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 330px;
+  gap: 24px;
   color: #c6e4ec;
   overflow: auto;
   animation: introCopyIn 0.6s ease;
 }
-.observation-map header {
-  width: min(100%, 700px);
-  margin-bottom: 12px;
+.obs-scene-column {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 450px;
 }
-.observation-map header span {
+.observation-map header {
+  padding: 12px 20px;
+}
+.observation-map header span,
+.obs-profile-kicker {
   color: #62d8d3;
   font-size: 10px;
   letter-spacing: 2px;
 }
 .observation-map h2 {
   margin: 8px 0;
-  font-size: 24px;
+  font-size: 20px;
+  overflow-wrap: anywhere;
 }
 .observation-map p {
   font-size: 12px;
   line-height: 1.6;
 }
-.observation-map svg {
-  width: min(100%, 620px);
-  min-height: 220px;
-  flex: 1;
-}
-.observation-map-note {
-  max-width: 650px;
-  color: #8aaebb;
+.obs-view-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 .observation-map select,
 .observation-map button {
@@ -41,30 +52,83 @@
   border: 1px solid #356170;
   border-radius: 6px;
   padding: 7px 12px;
-}
-.float-map-marker {
   cursor: pointer;
 }
-.float-map-marker:focus {
-  outline: none;
-  stroke: white;
-  stroke-width: 4;
+.observation-map button[aria-pressed='true'] {
+  background: #15534f;
+  border-color: #6bf0d8;
 }
-.observation-context {
+.obs-scene-canvas {
+  position: relative;
+  flex: 1;
+  min-height: 330px;
+}
+.observation-map-note {
+  color: #91aebb;
+  padding: 0 12px;
+}
+.obs-profile-card {
+  border: 1px solid #285361;
+  border-radius: 12px;
+  background: #07151fe8;
+  padding: 20px;
+  overflow: auto;
+}
+.obs-profile-chart {
+  display: block;
+  width: 100%;
+  min-height: 280px;
+  max-height: 390px;
+}
+.obs-profile-chart text {
+  fill: #a8c6d0;
+  font-size: 11px;
+}
+.obs-profile-card a {
+  color: #72e5d3;
+  font-size: 12px;
+}
+.obs-depth-label {
+  color: #b6d1df;
+  font-size: 10px;
+  white-space: nowrap;
+}
+.observation-map .obs-scene-marker {
+  padding: 6px;
+  border-radius: 50%;
+  background: #155d6680;
+  border: 1px solid #6bfff0;
+  position: relative;
+}
+.obs-scene-marker span {
+  display: block;
+  width: 7px;
+  height: 7px;
+  background: #8cfff0;
+  border-radius: 50%;
+}
+.obs-scene-marker b {
   position: absolute;
-  right: 12px;
-  top: 80px;
-  width: 258px;
-  padding: 18px;
-  color: #b8d1dd;
-  font-size: 13px;
-  line-height: 1.7;
+  left: 25px;
+  top: 0;
+  white-space: nowrap;
+  font-size: 10px;
+  background: #06232bdd;
+  padding: 5px;
 }
 @media (max-width: 900px) {
-  .observation-context {
-    display: none;
+  .observation-only.local-ocean .viewer,
+  .observation-only.local-ocean.has-inspector .viewer {
+    left: 12px;
+    right: 12px;
   }
   .observation-map {
-    inset: 85px 10px 30px;
+    grid-template-columns: 1fr;
+  }
+  .obs-profile-card {
+    overflow: visible;
+  }
+  .obs-scene-column {
+    min-height: 450px;
   }
 }

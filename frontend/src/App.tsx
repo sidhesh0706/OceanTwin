@@ -650,7 +650,7 @@ export default function App({
   // ── Main render ───────────────────────────────────────────────────────
   return (
     <main
-      className={`app ${intro ? 'intro-mode' : 'explorer-intro-exit'} ${presentation ? 'presentation' : ''} ${scene === 'ocean' ? 'local-ocean' : ''} ${selected || inspection ? 'has-inspector' : ''}`}
+      className={`app ${observationOnly ? 'observation-only' : ''} ${intro ? 'intro-mode' : 'explorer-intro-exit'} ${presentation ? 'presentation' : ''} ${scene === 'ocean' ? 'local-ocean' : ''} ${selected || inspection ? 'has-inspector' : ''}`}
     >
       {/* ── Navbar ──────────────────────────────────────────────────── */}
       <header className="topbar">
@@ -912,20 +912,6 @@ export default function App({
         />
       )}
 
-      {observationOnly && (
-        <aside className="observation-context">
-          <h3>Measured float profile</h3>
-          <p>
-            This flat map is centered on the selected observation. Select a marker to inspect its
-            measured depth profile.
-          </p>
-          <p>
-            The active model does not cover this location. Model depth layers, currents, transects
-            and comparison are available within its coverage.
-          </p>
-          <button onClick={() => setScene('globe')}>Choose another float on Earth</button>
-        </aside>
-      )}
       {/* ── Observation / point inspector (floating) ───────────────────── */}
       {analysis && (
         <SpatialAnalysis
@@ -937,7 +923,7 @@ export default function App({
           onClose={() => setAnalysis(null)}
         />
       )}
-      {(selected || inspection) && (
+      {!observationOnly && (selected || inspection) && (
         <Inspector
           dataset={dataset}
           field={(activeFrame ?? frame).slice}

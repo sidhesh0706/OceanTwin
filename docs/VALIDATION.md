@@ -55,3 +55,10 @@ The prototype supports the documented recording workflow. It is not full problem
 Every selected float now opens a local view. Outside the active model domain, a dedicated flat NASA Blue Marble map shows the selected and nearby measured observations, with 20°, 40° and 80° extents and longitude wrapping across the dateline. The existing inspector displays measured temperature/salinity and provenance. Model controls and timeline are hidden; no out-of-domain regional request or fabricated model field is used.
 
 Browser checks verified southern Indian, Atlantic and dateline Pacific float selection, salinity switching, extent changes and return to Earth, without console errors. The model-covered Arabian Sea retains its existing regional water-column workflow.
+
+
+## Global profile visibility correction
+
+Replaced the map-only fallback and off-to-the-side inspector with a regional WebGL ocean slab and an always-visible measured-profile card. Global floats now expose Top-down and Angled view controls, geographic imagery, neighboring float markers and a schematic depth column. The chart opens automatically, supports temperature/salinity switching and reports missing data or fetch failures with a retry control. It does not fabricate surrounding model data.
+
+Verified Pacific ARGO-5906600-086-A loads 1,011 measured temperature levels, switches to salinity, and supports top-down mode. Clicking nearby ARGO-2903422-250-A replaces the profile with 1,008 measured levels. Browser console was clear. Layout bounds confirm the chart is inside the viewport beside the scene. Production TypeScript/Vite build passed.

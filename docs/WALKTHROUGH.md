@@ -164,3 +164,5 @@ The gridded model is regional; global Argo observations do not imply a global mo
 ## Optional global-float shot for 0:30–1:00
 
 To demonstrate the new flat-map support, replace the globe rotation in this block: at 0:30 open Observations and choose ARGO-5906600-086-A; hold its Pacific flat map and measured profile until 0:40. Click Back to Earth, reopen Observations and select ARGO-3902755-003-A by 0:49, then hold the Arabian Sea transition until 1:00. Say: “Every float opens a local view with its measured profile. Where the active model has coverage, we can also explore the surrounding water column and compare the model with observations.” Continue the remaining script unchanged.
+
+For the global-float shot, the measured chart now opens automatically on the right. Use **Top-down** or **Angled view** above the scene, and **Temperature / Salinity** in the profile card. No separate “Open selected float profile” step is needed. The blue water block represents geographic/depth context, not a gridded temperature field.
