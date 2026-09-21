@@ -74,7 +74,7 @@ export default function ObservationScene({
       <ambientLight intensity={1.4} />
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.015, 0]}>
         <planeGeometry args={[18, 18]} />
-        <meshBasicMaterial color="#2589a7" transparent opacity={0.16} depthWrite={false} />
+        <meshBasicMaterial color="#d98262" transparent opacity={0.48} depthWrite={false} />
       </mesh>
       <Suspense fallback={null}>
         <Surface anchor={anchor} span={span} />
@@ -83,6 +83,17 @@ export default function ObservationScene({
         <boxGeometry args={[18, 3.2, 18]} />
         <meshBasicMaterial color="#07334a" transparent opacity={0.32} depthWrite={false} />
       </mesh>
+      <gridHelper
+        args={[18, 24, '#75d2d2', '#286378']}
+        position={[0, 0.03, 0]}
+        rotation={[0, 0, 0]}
+      />
+      <Html position={[-8.5, 0.22, -8.5]}>
+        <span className="obs-surface-label">MEASURED SURFACE CONTEXT</span>
+      </Html>
+      <Html position={[9.25, 0.12, 8.3]}>
+        <span className="obs-depth-label">DEPTH (m)</span>
+      </Html>
       <Line
         points={[
           [0, 0.1, z],

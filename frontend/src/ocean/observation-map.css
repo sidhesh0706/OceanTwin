@@ -93,6 +93,13 @@
   font-size: 10px;
   white-space: nowrap;
 }
+.obs-surface-label {
+  color: #d7f6ed;
+  font-size: 9px;
+  letter-spacing: 1.3px;
+  white-space: nowrap;
+  text-shadow: 0 1px 4px #00131c;
+}
 .observation-map .obs-scene-marker {
   padding: 6px;
   border-radius: 50%;
