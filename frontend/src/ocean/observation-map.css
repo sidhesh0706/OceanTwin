@@ -130,12 +130,20 @@
     right: 12px;
   }
   .observation-map {
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
   }
   .obs-profile-card {
     overflow: visible;
+    flex: none;
   }
   .obs-scene-column {
-    min-height: 450px;
+    min-height: 0;
+    flex: none;
+  }
+  .obs-scene-canvas {
+    flex: none;
+    height: 330px;
   }
 }

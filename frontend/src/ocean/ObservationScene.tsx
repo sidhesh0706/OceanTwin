@@ -37,7 +37,7 @@ function Surface({ anchor, span }: { anchor: Observation; span: number }) {
   return (
     <mesh rotation={[-Math.PI / 2, 0, 0]}>
       <planeGeometry args={[18, 18]} />
-      <meshBasicMaterial map={texture} side={THREE.DoubleSide} transparent opacity={0.26} />
+      <meshBasicMaterial map={texture} side={THREE.DoubleSide} transparent opacity={0.62} />
     </mesh>
   );
 }
@@ -82,6 +82,10 @@ export default function ObservationScene({
     const ratio = (Number(profileValue(depth)) - minimum) / Math.max(maximum - minimum, 0.001);
     return new THREE.Color().setHSL(0.59 - ratio * 0.53, 0.72, 0.54);
   };
+  const basinLabel = anchor.ocean_basin
+    ? `${anchor.ocean_basin.toUpperCase()} OCEAN`
+    : 'OPEN OCEAN';
+  const hemisphereLabel = anchor.latitude >= 0 ? 'NORTHERN HEMISPHERE' : 'SOUTHERN HEMISPHERE';
   return (
     <Canvas
       camera={{ position: [9, 13, 16], fov: 45 }}
@@ -92,7 +96,7 @@ export default function ObservationScene({
       <ambientLight intensity={1.4} />
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.015, 0]}>
         <planeGeometry args={[18, 18]} />
-        <meshBasicMaterial color={colorAt(0)} transparent opacity={0.82} depthWrite={false} />
+        <meshBasicMaterial color={colorAt(0)} transparent opacity={0.52} depthWrite={false} />
       </mesh>
       <Suspense fallback={null}>
         <Surface anchor={anchor} span={span} />
@@ -119,6 +123,12 @@ export default function ObservationScene({
       />
       <Html position={[-8.5, 0.22, -8.5]}>
         <span className="obs-surface-label">MEASURED SURFACE CONTEXT</span>
+      </Html>
+      <Html position={[0, 0.22, -3.5]} center>
+        <span className="obs-surface-label">{basinLabel}</span>
+      </Html>
+      <Html position={[0, 0.22, 3.5]} center>
+        <span className="obs-surface-label">{hemisphereLabel}</span>
       </Html>
       <Html position={[9.25, 0.12, 8.3]}>
         <span className="obs-depth-label">DEPTH (m)</span>
