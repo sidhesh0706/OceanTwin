@@ -2,7 +2,7 @@ import { Suspense, useEffect, useMemo } from 'react';
 import { Canvas, useThree } from '@react-three/fiber';
 import { Html, Line, OrbitControls, useTexture } from '@react-three/drei';
 import * as THREE from 'three';
-import type { Observation } from '../types';
+import type { Comparison, Observation } from '../types';
 
 function Camera({ angled }: { angled: boolean }) {
   const { camera } = useThree();
@@ -37,7 +37,7 @@ function Surface({ anchor, span }: { anchor: Observation; span: number }) {
   return (
     <mesh rotation={[-Math.PI / 2, 0, 0]}>
       <planeGeometry args={[18, 18]} />
-      <meshBasicMaterial map={texture} side={THREE.DoubleSide} />
+      <meshBasicMaterial map={texture} side={THREE.DoubleSide} transparent opacity={0.26} />
     </mesh>
   );
 }
@@ -46,12 +46,14 @@ export default function ObservationScene({
   observations,
   span,
   angled,
+  profile,
   onSelect,
 }: {
   anchor: Observation;
   observations: Observation[];
   span: number;
   angled: boolean;
+  profile: Comparison['profiles'];
   onSelect: (o: Observation) => void;
 }) {
   const south = Math.max(-90, Math.min(90 - span, anchor.latitude - span / 2));
@@ -64,6 +66,22 @@ export default function ObservationScene({
       o.latitude <= south + span,
   );
   const z = (-(anchor.latitude - centerLat) / span) * 18;
+  const measured = profile.filter((row) => row.observed !== null && Number.isFinite(row.observed));
+  const values = measured.map((row) => row.observed as number);
+  const minimum = values.length ? Math.min(...values) : 0;
+  const maximum = values.length ? Math.max(...values) : 1;
+  const profileValue = (depth: number) => {
+    const nearest = measured.reduce<(typeof measured)[number] | null>(
+      (best, row) =>
+        !best || Math.abs(row.depth - depth) < Math.abs(best.depth - depth) ? row : best,
+      null,
+    );
+    return nearest?.observed ?? minimum;
+  };
+  const colorAt = (depth: number) => {
+    const ratio = (Number(profileValue(depth)) - minimum) / Math.max(maximum - minimum, 0.001);
+    return new THREE.Color().setHSL(0.59 - ratio * 0.53, 0.72, 0.54);
+  };
   return (
     <Canvas
       camera={{ position: [9, 13, 16], fov: 45 }}
@@ -74,7 +92,7 @@ export default function ObservationScene({
       <ambientLight intensity={1.4} />
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.015, 0]}>
         <planeGeometry args={[18, 18]} />
-        <meshBasicMaterial color="#d98262" transparent opacity={0.48} depthWrite={false} />
+        <meshBasicMaterial color={colorAt(0)} transparent opacity={0.82} depthWrite={false} />
       </mesh>
       <Suspense fallback={null}>
         <Surface anchor={anchor} span={span} />
@@ -83,6 +101,17 @@ export default function ObservationScene({
         <boxGeometry args={[18, 3.2, 18]} />
         <meshBasicMaterial color="#07334a" transparent opacity={0.32} depthWrite={false} />
       </mesh>
+      {[0.12, 0.28, 0.48, 0.7, 0.92].map((fraction) => (
+        <mesh key={fraction} rotation={[-Math.PI / 2, 0, 0]} position={[0, -3.2 * fraction, 0]}>
+          <planeGeometry args={[17.8, 17.8]} />
+          <meshBasicMaterial
+            color={colorAt(anchor.max_depth * fraction)}
+            transparent
+            opacity={0.2}
+            depthWrite={false}
+          />
+        </mesh>
+      ))}
       <gridHelper
         args={[18, 24, '#75d2d2', '#286378']}
         position={[0, 0.03, 0]}

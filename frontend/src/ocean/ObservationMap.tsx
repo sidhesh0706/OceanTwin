@@ -86,6 +86,7 @@ export function ObservationMap({
               observations={observations}
               span={span}
               angled={angled}
+              profile={rows}
               onSelect={onSelect}
             />
           </Suspense>
