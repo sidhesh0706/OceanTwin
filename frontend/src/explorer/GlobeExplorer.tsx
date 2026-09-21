@@ -804,8 +804,8 @@ export default function GlobeExplorer(props: Props) {
   ]);
 
   // ── Current field ──────────────────────────────────────────────────────
-  // Direction, magnitude and distribution are backend u/v only — no fake particles.
-  // Pre-allocates PointPrimitives once; updates .position in-place for 60 FPS smoothness.
+  // Animated point flow is driven only by backend u/v values. Static traces
+  // are deliberately omitted: they can look like frozen flow in a recording.
   useEffect(() => {
     const L = layers.current;
     const Cesium = getCesium();
@@ -827,47 +827,24 @@ export default function GlobeExplorer(props: Props) {
       }
       L.currentAnim = null;
     }
-    if (!viewerRef.current || !Cesium || !L.lines || !L.currentPts || !globeReady) return;
+    if (!viewerRef.current || !Cesium || !L.currentPts || !globeReady) return;
     if (!currents || !frame.currents) return;
 
     try {
       const field = frame.currents;
       // Slice maps drape the selected-depth data on the surface for geographic reading.
       const h = 4000;
-      const step = density >= 2200 ? 3 : density >= 1200 ? 4 : 5;
-      const cap = Math.min(600, Math.max(150, density));
-      let drawn = 0;
-
-      for (let j = 0; j < field.latitudes.length && drawn < cap; j += step) {
-        for (let i = 0; i < field.longitudes.length && drawn < cap; i += step) {
-          let lon = field.longitudes[i];
-          let lat = field.latitudes[j];
-          const path: unknown[] = [];
-          for (let s = 0; s < 5; s++) {
-            const uv = samplePoint(field, lon, lat);
-            if (!uv) break;
-            path.push(Cesium.Cartesian3.fromDegrees(lon, lat, h));
-            lon += uv[0] * 1.5;
-            lat += uv[1] * 1.5;
-          }
-          if (path.length > 1 && Cesium.Material) {
-            L.lines.add({
-              positions: path,
-              width: 1.5,
-              material: Cesium.Material.fromType(Cesium.Material.ColorType, {
-                color: new Cesium.Color(0.85, 0.96, 1, 0.42),
-              }),
-            });
-            drawn++;
-          }
-        }
-      }
-
-      // Collect wet ocean locations for particle seeds
+      const minAnimatedSpeed = 0.012; // m/s; avoid presenting stationary points as flow.
+      // Collect wet locations with a measurable velocity for particle seeds.
       const wet: [number, number][] = [];
       for (let j = 0; j < field.latitudes.length; j += 2)
         for (let i = 0; i < field.longitudes.length; i += 2)
-          if (samplePoint(field, field.longitudes[i], field.latitudes[j]))
+          if (
+            (() => {
+              const uv = samplePoint(field, field.longitudes[i], field.latitudes[j]);
+              return uv !== null && Math.hypot(uv[0], uv[1]) >= minAnimatedSpeed;
+            })()
+          )
             wet.push([field.longitudes[i], field.latitudes[j]]);
       if (!wet.length) return;
 
@@ -903,15 +880,17 @@ export default function GlobeExplorer(props: Props) {
           const p = parts[i];
           p.age += dt;
           let uv = samplePoint(field, p.lon, p.lat);
-          if (!uv || p.age > p.life) {
+          let speed = uv ? Math.hypot(uv[0], uv[1]) : 0;
+          if (!uv || speed < minAnimatedSpeed || p.age > p.life) {
             const w = wet[Math.floor(rand() * wet.length)];
             if (!w) continue;
             p.lon = w[0];
             p.lat = w[1];
             p.age = 0;
             uv = samplePoint(field, p.lon, p.lat);
+            speed = uv ? Math.hypot(uv[0], uv[1]) : 0;
           }
-          if (!uv) continue;
+          if (!uv || speed < minAnimatedSpeed) continue;
           const dl = (uv[0] * 250000) / 111320 / Math.max(0.2, Math.cos((p.lat * Math.PI) / 180));
           const da = (uv[1] * 250000) / 111320;
           p.lon += dl * dt;
@@ -919,7 +898,6 @@ export default function GlobeExplorer(props: Props) {
           if (p.lon > 180) p.lon -= 360;
           if (p.lon < -180) p.lon += 360;
 
-          const speed = Math.hypot(uv[0], uv[1]);
           const bright = Math.min(1, 0.35 + speed * 2.2);
           const fade = Math.min(1, p.age / 0.5, (p.life - p.age) / 0.8);
           const a = Math.max(0, fade) * 0.9;

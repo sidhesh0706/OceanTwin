@@ -179,6 +179,7 @@ export default function App({
       setInspection(null);
       setPlaying(false);
       setMode('slice');
+      setShowField(false);
       // Keep the map visually clean on load. Current vectors remain available
       // as an explicit layer in Settings and through Current Field mode.
       setCurrents(false);
@@ -431,6 +432,9 @@ export default function App({
         { method: 'POST', body },
       );
       await bootstrap();
+      // A newly uploaded field should be immediately visible, while a fresh
+      // application load intentionally starts with Earth imagery only.
+      setShowField(true);
       setUploadNotice(
         'profiles' in loaded
           ? `${file.name}: ${loaded.profiles} profiles loaded. Ocean fields are unchanged.`

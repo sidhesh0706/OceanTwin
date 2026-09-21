@@ -395,7 +395,7 @@ export function ToolRail(p: Props) {
             {[
               { name: 'Argo floats', value: p.argo, set: p.onArgo },
               { name: 'Gliders', value: p.gliders, set: p.onGliders },
-              { name: 'Current vectors', value: p.currents, set: p.onCurrents },
+              { name: 'Animated current flow', value: p.currents, set: p.onCurrents },
               { name: 'Reference grid', value: p.grid, set: p.onGrid },
             ].map((o) => (
               <label key={o.name} className="fp-toggle-row">
